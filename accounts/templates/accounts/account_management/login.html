@@ -1,0 +1,28 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Login
+{% endblock header %}
+
+
+{% block content %}
+    <div class='loginDiv'>
+        <form method="POST" action="" class="loginDivform">
+            {% csrf_token %}
+            <div class='title'>
+                <p>
+                    Member login
+                </p>
+            </div>
+            <div class="emailDiv">
+                <input type="email" placeholder="Email" name="email">
+            </div>
+            <div class="passwordDiv">
+                <input type="password"  name="password" placeholder="Password">
+            </div>
+            <div class="loginButtonDiv">
+                <input type="submit" value="Login">
+            </div>
+        </form>
+    </div>
+{% endblock content %}

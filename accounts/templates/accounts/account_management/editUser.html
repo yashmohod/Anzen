@@ -1,0 +1,82 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Edit User
+{% endblock header %}
+
+
+{% block content %}
+<div class="registration">
+    <form method="POST" action="" class="registrationForm">
+        {% csrf_token %}
+        <div>
+            <p>Badge No.</p>
+            <input type="number" value="{{ user.badgeNo }}" name="badgeNo" required>
+        </div>
+        <div>
+            <p>First Name</p>
+            <input type="text" value="{{ user.firstName }}"name="firstName" required>
+        </div>
+        <div>
+            <p>Last Name</p>
+            <input type="text" value="{{ user.lastName }}"name="lastName" required>
+        </div>
+        <div>
+            <p>Date</p>
+            <input type="date"name="dob" required>
+        </div>
+        <div>
+            <p>College ID</p>
+            <input type="number" value="{{ user.collegeId }}"name="collegeId" required>
+        </div>
+        <div>
+            <p>Status</p>
+            <select name="status" id="id_status" required>
+                <option value="Active">Active</option>
+                <option value="Not Active">Not Active</option>
+             </select>
+        </div>
+        <div>
+            <p>Email</p>
+            <input type="email" value="{{ user.email }}"name="email" required>
+        </div>
+        
+        <input type="submit" value="Update" class="registerButton">
+
+    </form>
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    
+
+    var dob = new Date('{{user.dob}}');
+    console.log('{{user.dob}}');
+    dob.getDate()
+    year  = dob.getFullYear();
+    month = (dob.getMonth() + 1).toString().padStart(2, "0");
+    day   = dob.getDate().toString().padStart(2, "0");
+    var dob2 = (year+"-"+month+"-"+day)
+
+    const status = '{{user.status}}';
+
+
+
+    
+    const ele_dob = document.querySelector('input[type="date"]');
+    
+    const ele_status = document.getElementById('id_status');
+
+
+   
+    ele_dob.value=dob2;
+
+    ele_status.value=status;
+
+
+
+
+
+</script>
+{% endblock script %}

@@ -1,0 +1,310 @@
+/* css reset code */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* css for index page */
+
+body{
+    display: flex;
+    display: flex;
+    flex-flow:column;
+    height: 100%;
+}
+
+.navBar{
+    background-color: #0B0C10 ;
+    flex: 0 1 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.navBarTitle{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.navBarTitle a{
+  text-decoration: none;
+}
+.navBarTitle h1{
+    font-size: 50px;
+    color: #66fcf1;
+}
+.navBarTitle h2{
+    font-size: 20px;
+    color: #ffffff;
+}
+.mainBody{
+    background-color: #1f2833 ;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+}
+
+/* css for login page */
+.loginDiv{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: -20%;
+    height: 400px;
+    width: 300px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.loginDivform{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 400px;
+    width: 300px;
+}
+.title{
+    color: #66fcf1;
+}
+/* .emailDiv{
+
+}
+.passwordDiv{
+
+}
+.loginButtonDiv{
+    
+} */
+
+
+/* css for register page */
+
+.registration{
+    width: 100%;
+    background-color: rgba(255, 255, 255,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: -20%;
+
+}
+
+.registrationForm{
+    width: 95%;
+    padding-bottom:1%;
+    padding-TOP:1%; 
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    color: #ffffff;
+    flex-wrap: wrap;
+}
+.registerButton{
+    cursor: pointer;
+    outline: 0;
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 6px 12px;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    color: #66fcf1;
+    border-color: #66fcf1;
+}
+.registerButton:hover {
+    color: rgb(39, 39, 39);
+    background-color: #66fcf1;
+    border-color: #66fcf1;
+}
+.accountsDisplay{
+  width: 100%;
+  margin-top: -30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+
+}
+
+.accountsDisplayForm{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-left: 10%;
+  padding-right: 10%;
+} 
+.accountsDisplayForm table{
+  width: 100%;
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.editButton{
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color: #24e00b9d;
+  border-color: #24e00b9d;
+}
+.editButton:hover {
+  color: rgb(255, 255, 255);
+  background-color: #24e00b9d;
+  border-color: #24e00b9d;
+}
+
+.deleteButton{
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color: #d10d0d;
+  border-color: #d10d0d;
+}
+.deleteButton:hover {
+  color: rgb(255, 255, 255);
+  background-color: #d10d0d;
+  border-color: #d10d0d;
+}
+.statusButton{
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color: #45a29e;
+  border-color: #45a29e;
+}
+.statusButton:hover {
+  color: rgb(255, 255, 255);
+  background-color: #45a29e;
+  border-color: #45a29e;
+}
+
+.passButton{
+  cursor: pointer;
+  outline: 0;
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 6px 12px;
+  font-size: 1rem;
+  border-radius: .25rem;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+  color: #c97414;
+  border-color: #c97414;
+}
+.passButton:hover {
+  color: rgb(255, 255, 255);
+  background-color: #c97414;
+  border-color: #c97414;
+}

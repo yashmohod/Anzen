@@ -1,0 +1,116 @@
+import re
+from urllib.parse import urlencode
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
+from requests import request
+from . import forms,models
+from django.contrib import messages
+# Create your views here.
+
+def userLogin(request):
+
+    if request.method == 'POST' :
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate( request,email=email, password= password)
+        print(email)
+        print(password)
+        print(user)
+        if user is not None :
+            login(request,user)
+            return redirect('testLogin')
+        else:
+            print("failed")
+            
+    return render(request, 'accounts/account_management/login.html')
+
+def register(request):
+    form = forms.creatUserForm(request.POST)
+    context ={'regisForm':form }
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect("userAccounts")
+        else:
+            messages.error(request,"Passwords did not match or were two short.")
+
+
+    return render(request,'accounts/account_management/register.html',context)
+def editPass(request,userID):
+    curRec = models.User.objects.get(id =userID )
+    form = forms.editUserPasword(request.POST,instance= curRec )
+    context ={'regisForm':form }
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            return redirect("userAccounts")
+        else:
+            messages.error(request,"Passwords did not match or were two short.")
+
+
+    return render(request,'accounts/account_management/editPass.html',context)
+
+def userAccounts(request):
+    print(request)
+    users = models.User.objects.all()
+    context ={'users':users }
+    if  request.method == 'POST':
+        data = request.POST
+        lisst = list(data)
+        dat = lisst[1]
+        print(dat)
+        buttonFunc = dat[0]
+        userID = dat[1:]
+        curRec = models.User.objects.get(id =userID )
+        if buttonFunc == '0':
+            print("edit")
+            redirect_url = reverse('editUser', args=[userID,request.get_full_path()])
+            # parameters = urlencode(curRec)
+            return redirect(redirect_url)
+        elif buttonFunc == '1':
+            curRec.delete()
+            print("delete")
+        elif buttonFunc == '2':
+            curstat =curRec.status
+            if curstat == 'Active':
+                curRec.status = 'Not Active'
+                curRec.save()
+            elif curstat == 'Not Active':
+                curRec.status = 'Active'
+                curRec.save()
+            else:
+                curRec.status = 'Active'
+                curRec.save()
+        elif buttonFunc == '3':
+            redirect_url = reverse('editPass', args=[userID])
+            # parameters = urlencode(curRec)
+            return redirect(redirect_url)
+
+    return render(request,'accounts/account_management/userAccounts.html',context)
+
+def editUser(request,userID,backurl):
+    print(backurl)
+    curRec = models.User.objects.get(id =userID)
+    if request.method == 'POST':
+        badgeNo = request.POST.get("badgeNo")
+        firstName = request.POST.get("firstName")
+        lastName = request.POST.get("lastName")
+        dob = request.POST.get("dob")
+        collegeId = request.POST.get("collegeId")
+        status = request.POST.get("status")
+        email = request.POST.get("email")
+
+        curRec.badgeNo = badgeNo
+        curRec.firstName = firstName
+        curRec.lastName = lastName
+        curRec.dob = dob
+        curRec.collegeId = collegeId
+        curRec.status = status
+        curRec.email = email
+
+        curRec.save()
+        return redirect('userAccounts')
+
+    return render(request,'accounts/account_management/editUser.html',{'user':curRec, 'backurl':backurl})

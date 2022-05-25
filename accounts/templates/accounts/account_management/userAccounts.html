@@ -1,0 +1,56 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Accounts
+{% endblock header %}
+
+
+{% block content %}
+
+    <div class="accountsDisplay">
+        <H1 style="color:#66fcf1 ;">
+            SASP Members
+        </H1>
+        <form class="accountsDisplayForm" action="" method="POST">
+            {% csrf_token %}
+            
+            <table >
+                <tr>
+                    <th>Badge No.</th>
+                    <th>First name</th>
+                    <th>Last name</th>
+                    <th>Dob</th>
+                    <th>College ID</th>
+                    <th>Status</th>
+                    <th>Email</th>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <td> {{ user.badgeNo }}</td>
+                    <td>{{ user.firstName }}</td>
+                    <td>{{ user.lastName }}</td>
+                    <td>{{ user.dob }}</td>
+                    <td>{{ user.collegeId }}</td>
+                    <td>{{ user.status }}</td>
+                    <td> {{ user.email }}</td>
+                    <td>
+                        <button type="submit" class="editButton" value="edit" name="0{{user.id}}">Edit</button>
+                        <button type="submit" class="deleteButton" value="delete" name="1{{user.id}}">Delete</button>
+                        <button type="submit" class="statusButton" value="changestat" name="2{{user.id}}"> Change Status</button>
+                        <button type="submit" class="passButton" value="changepass" name="3{{user.id}}"> Change Password</button>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </table>
+            
+            
+        </form>
+    </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    
+</script>
+{% endblock script %}
