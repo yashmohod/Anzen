@@ -1,9 +1,6 @@
-from email.policy import default
-from enum import unique
-from operator import mod
-from pickle import TRUE
+from datetime import date
 from pyexpat import model
-from select import select
+from statistics import mode
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -37,7 +34,7 @@ class User(AbstractBaseUser,PermissionsMixin):
     dob = models.DateField( auto_now=False, auto_now_add=False,null=True)
     collegeId = models.IntegerField(null=True)
     status = models.CharField(default='Active',max_length=50, choices=[('Active','Active'),('Not Active','Not Active')])
-    email = models.EmailField( max_length=254, unique=TRUE)
+    email = models.EmailField( max_length=254, unique=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=True)
     objects= CustomAccountManager() 
@@ -45,4 +42,36 @@ class User(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD = 'email'
     
     def __str__(self):
-        return self.firstName
+        return self.firstName+" "+self.lastName
+
+
+class inceidents (models.Model):
+    inceidentName = models.CharField(max_length=100,null=True)
+    def __str__(self):
+        return self.inceidentName
+
+
+class incidentReport (models.Model):
+    reportedBy  = models.ForeignKey(User,null=False)
+    inceident = models.ForeignKey(inceidents,null=False)
+    date = models.DateField(auto_now=False, auto_now_add=False,null=False)
+    receivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    enrouteTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    arivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    clearTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    summary = models.TextField()
+    
+
+class muleInspection(models.Model):
+    reportedBy  = models.ForeignKey(User,null=False)
+    date = models.DateField(auto_now=False, auto_now_add=False,null=False)
+    summary = models.TextField()
+
+class academicLockup(models.Model):
+    reportedBy  = models.ForeignKey(User,null=False)
+    date = models.DateField(auto_now=False, auto_now_add=False,null=False)
+    startTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    endTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    summary = models.TextField()
+
+
