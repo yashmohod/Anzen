@@ -1,0 +1,39 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Accounts
+{% endblock header %}
+
+
+{% block content %}
+
+    <div class="accountsDisplay">
+        <H1 style="color:#66fcf1 ;">
+            Inceidents
+        </H1>
+        <form class="accountsDisplayForm" action="" method="POST">
+            {% csrf_token %}
+            
+            <table >
+                {% for inceident in inceidents %}
+                <tr>
+                    <td> {{ inceident }}</td>
+                    <td>
+                        <button type="submit" class="editButton" value="edit" name="0{{user.id}}">Edit</button>
+                        <button type="submit" class="deleteButton" value="delete" name="1{{user.id}}">Delete</button>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </table>
+            
+            
+        </form>
+    </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+    
+</script>
+{% endblock script %}

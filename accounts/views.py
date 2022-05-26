@@ -15,13 +15,12 @@ def userLogin(request):
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate( request,email=email, password= password)
-        print(email)
-        print(password)
-        print(user)
+  
         if user is not None :
             login(request,user)
             return redirect('testLogin')
         else:
+            # write code to tell user login unsccessful
             print("failed")
             
     return render(request, 'accounts/account_management/login.html')
@@ -60,18 +59,17 @@ def userAccounts(request):
         data = request.POST
         lisst = list(data)
         dat = lisst[1]
-        print(dat)
+
         buttonFunc = dat[0]
         userID = dat[1:]
         curRec = models.User.objects.get(id =userID )
         if buttonFunc == '0':
-            print("edit")
+
             redirect_url = reverse('editUser', args=[userID,request.get_full_path()])
             # parameters = urlencode(curRec)
             return redirect(redirect_url)
         elif buttonFunc == '1':
             curRec.delete()
-            print("delete")
         elif buttonFunc == '2':
             curstat =curRec.status
             if curstat == 'Active':
@@ -91,7 +89,7 @@ def userAccounts(request):
     return render(request,'accounts/account_management/userAccounts.html',context)
 
 def editUser(request,userID,backurl):
-    print(backurl)
+
     curRec = models.User.objects.get(id =userID)
     if request.method == 'POST':
         badgeNo = request.POST.get("badgeNo")
@@ -114,3 +112,9 @@ def editUser(request,userID,backurl):
         return redirect('userAccounts')
 
     return render(request,'accounts/account_management/editUser.html',{'user':curRec, 'backurl':backurl})
+
+
+def incedentEntry(request):
+    inceidents = models.inceidents.objects.all()
+
+    return render(request,'accounts/reports/inceidentsEntry.html',{'inceidents':inceidents})

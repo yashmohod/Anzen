@@ -52,8 +52,8 @@ class inceidents (models.Model):
 
 
 class incidentReport (models.Model):
-    reportedBy  = models.ForeignKey(User,null=False)
-    inceident = models.ForeignKey(inceidents,null=False)
+    reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
+    inceident = models.CharField(max_length=100,null=False,choices=[])
     date = models.DateField(auto_now=False, auto_now_add=False,null=False)
     receivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     enrouteTime = models.TimeField(auto_now=False, auto_now_add=False,)
@@ -63,12 +63,12 @@ class incidentReport (models.Model):
     
 
 class muleInspection(models.Model):
-    reportedBy  = models.ForeignKey(User,null=False)
+    reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
     date = models.DateField(auto_now=False, auto_now_add=False,null=False)
     summary = models.TextField()
 
 class academicLockup(models.Model):
-    reportedBy  = models.ForeignKey(User,null=False)
+    reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
     date = models.DateField(auto_now=False, auto_now_add=False,null=False)
     startTime = models.TimeField(auto_now=False, auto_now_add=False,)
     endTime = models.TimeField(auto_now=False, auto_now_add=False,)
