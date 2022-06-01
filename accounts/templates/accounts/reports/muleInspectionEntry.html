@@ -1,0 +1,28 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Mule Inspection Entry
+{% endblock header %}
+
+
+{% block content %}
+    <div class="muleInspectionEntryMain">
+        <form method="POST">
+            {% csrf_token %}
+            {{muleInspectionForm}}
+            <!-- {% for field in muleInspectionForm %}
+            <div>
+                <p>{{field.label}}</p>
+                {{field}}
+            </div>
+            {% endfor %} -->
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+{% endblock content %}
+
+{% block script %}
+<script>
+
+</script>
+{% endblock script %}

@@ -42,10 +42,10 @@ class User(AbstractBaseUser,PermissionsMixin):
     USERNAME_FIELD = 'email'
     
     def __str__(self):
-        return self.firstName+" "+self.lastName
+        ret = str(self.firstName)+","+str(self.lastName)
+        return ret
 
-
-class inceidents (models.Model):
+class inceident (models.Model):
     inceidentName = models.CharField(max_length=100,null=True)
     def __str__(self):
         return self.inceidentName
@@ -60,12 +60,15 @@ class incidentReport (models.Model):
     arivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     clearTime = models.TimeField(auto_now=False, auto_now_add=False,)
     summary = models.TextField()
+
     
 
 class muleInspection(models.Model):
     reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
     date = models.DateField(auto_now=False, auto_now_add=False,null=False)
     summary = models.TextField()
+    def __str__(self):
+        return str(self.reportedBy)+","+str(self.date)
 
 class academicLockup(models.Model):
     reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)

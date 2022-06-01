@@ -9,6 +9,7 @@ urlpatterns = [
     path('userAccounts/',views.userAccounts,name='userAccounts'),
     path('editUser/<int:userID>?<path:backurl>', views.editUser, name='editUser'),
     path('editPass/<int:userID>/',views.editPass,name='editPass'),
-    path('inceidents/',views.incedentEntry,name='incedentEntry'),
+    path('incedentEntry/',views.incedentEntry,name='incedentEntry'),
+    path('muleInspectionEntry/',views.muleInspectionEntry,name='muleInspectionEntry'),
 ]
 

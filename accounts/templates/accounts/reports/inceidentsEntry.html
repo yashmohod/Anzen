@@ -1,26 +1,40 @@
 {% extends 'accounts/index.html' %}
 
 {% block header %}
-Accounts
+Inceident Entry
 {% endblock header %}
 
 
 {% block content %}
-
-    <div class="accountsDisplay">
+<div class="inceidentFormsBody">
+    <div class="inceidentAddDisplay">
+        <H1 style="color:#66fcf1 ;">
+            Add Inceidents
+        </H1>
+        <div class="inceidentAddForm">
+            <form class="inceidentsAddForm" action="" method="POST">
+                {% csrf_token %}
+                <input type="text" name="newInceident" required>
+                <button type="submit" class="newInceidentButton">Add Inceident</button>
+                
+            </form>
+        </div>
+    </div>
+    <div class="inceidentsDisplay">
         <H1 style="color:#66fcf1 ;">
             Inceidents
         </H1>
-        <form class="accountsDisplayForm" action="" method="POST">
+        <form class="inceidentsDisplayForm" action="" method="POST">
             {% csrf_token %}
             
             <table >
                 {% for inceident in inceidents %}
                 <tr>
-                    <td> {{ inceident }}</td>
+                    <td > {{ inceident }}</td>
                     <td>
-                        <button type="submit" class="editButton" value="edit" name="0{{user.id}}">Edit</button>
-                        <button type="submit" class="deleteButton" value="delete" name="1{{user.id}}">Delete</button>
+                        <button style="display: none;" class="editButton" value="edit" name="" id="editSubmit">Edit</button>
+                        <p onclick="editInceident()" class="editButton">edit</p>
+                        <button type="submit" class="deleteButton" value="delete" name="1{{inceident.id}}">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -30,10 +44,19 @@ Accounts
             
         </form>
     </div>
+</div>
 {% endblock content %}
 
 {% block script %}
 <script>
-    
+    function editInceident(){
+        var inceident = String(window.prompt("Enter the updated name ", ""));
+        inceident = '0'+inceident;
+        const editButton = document.getElementById('editSubmit');
+        editButton.setAttribute('name', inceident);
+        editButton.click();
+    }
+
+  
 </script>
 {% endblock script %}

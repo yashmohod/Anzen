@@ -1,9 +1,11 @@
+from pyexpat import model
 import re
 from urllib.parse import urlencode
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
+from matplotlib.style import context
 from requests import request
 from . import forms,models
 from django.contrib import messages
@@ -115,6 +117,33 @@ def editUser(request,userID,backurl):
 
 
 def incedentEntry(request):
-    inceidents = models.inceidents.objects.all()
+    inceidents = models.inceident.objects.all()
+    if request.method =='POST':
+        if'newInceident' in request.POST:
+            inceident = request.POST['newInceident']
+            models.inceident.objects.create(inceidentName=inceident)
+        else:
+            data = request.POST
+            lisst = list(data)
+            dat = lisst[1]
+            buttonFunc = dat[0]
+            inceidentId = dat[1:]
+            if buttonFunc == '0':
+                pass
+            elif buttonFunc == '1':
+                inceToDel = models.inceident.objects.get(id=inceidentId)
+                inceToDel.delete()
 
     return render(request,'accounts/reports/inceidentsEntry.html',{'inceidents':inceidents})
+
+
+def muleInspectionEntry(request):
+    #currentMembers = models.User.objects.filter(status='Active')
+    muleInspectionForm = forms.muleInspection(request.POST)
+    print(muleInspectionForm)
+    print('hi')
+    context = {'muleInspectionForm':muleInspectionForm}
+    
+    
+
+    return render(request,'accounts/reports/muleInspectionEntry.html',context)
