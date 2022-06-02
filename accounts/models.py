@@ -46,7 +46,7 @@ class User(AbstractBaseUser,PermissionsMixin):
         return ret
 
 class inceident (models.Model):
-    inceidentName = models.CharField(max_length=100,null=True)
+    inceidentName = models.CharField(max_length=150,null=True)
     def __str__(self):
         return self.inceidentName
 
@@ -58,7 +58,7 @@ class location (models.Model):
 
 class incidentReport (models.Model):
     reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
-    inceident = models.CharField(max_length=100,null=False)
+    inceident = models.CharField(max_length=150,null=False)
     date = models.DateField(auto_now=False, auto_now_add=False,null=False)
     receivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     enrouteTime = models.TimeField(auto_now=False, auto_now_add=False,)

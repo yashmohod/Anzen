@@ -1,0 +1,23 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Dashboard
+{% endblock header %}
+
+
+{% block content %}
+    <div class="dashBoardGreetings">
+        <p class="dashBoardGreetingsText">Hi {{user.firstName}}</p>
+    </div>
+    <div class="dashboardNavigation">
+        <div>
+            <p>Daily</p>
+        </div>
+        <div>
+            <p>Mule Inspection</p>
+        </div>
+        <div>
+            <p>Academic Lockup</p>
+        </div>
+    </div>
+{% endblock content %}
