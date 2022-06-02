@@ -1,3 +1,4 @@
+from datetime import datetime
 from pyexpat import model
 import re
 from urllib.parse import urlencode
@@ -138,12 +139,30 @@ def incedentEntry(request):
 
 
 def muleInspectionEntry(request):
-    #currentMembers = models.User.objects.filter(status='Active')
-    muleInspectionForm = forms.muleInspection(request.POST)
-    print(muleInspectionForm)
-    print('hi')
-    context = {'muleInspectionForm':muleInspectionForm}
     
-    
+    if request.method == 'POST':
+        newentry = models.muleInspection(reportedBy = request.user,date=request.POST.get('date'),summary =request.POST.get('summary') )
+        newentry.save()
+        return redirect('dashBoard')
+    return render(request,'accounts/reports/muleInspectionEntry.html')
 
-    return render(request,'accounts/reports/muleInspectionEntry.html',context)
+def dashBoard(request):
+    return render(request,'accounts/reports/dashBoard.html')
+
+def inceidentReportEntry(request):
+    inceidents=models.inceident.objects.all()
+    locations = models.location.objects.all()
+    if request.method == 'POST':
+        newinceidentReportEntry = models.incidentReport(reportedBy = request.user,
+        inceident =request.POST.get('inceident'),
+        date =request.POST.get('date'),
+        receivedTime =request.POST.get('receivedTime'),
+        enrouteTime =request.POST.get('enrouteTime'),
+        arivedTime =request.POST.get('arivedTime'), 
+        clearTime =request.POST.get('clearTime'),
+        location = request.POST.get('location'),
+        summary =request.POST.get('summary')
+        )
+        newinceidentReportEntry.save()
+        return redirect('dashBoard')
+    return render(request,'accounts/reports/inceidentReportEntry.html',{'inceidents':inceidents,'locations':locations})

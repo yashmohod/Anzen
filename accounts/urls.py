@@ -10,6 +10,9 @@ urlpatterns = [
     path('editUser/<int:userID>?<path:backurl>', views.editUser, name='editUser'),
     path('editPass/<int:userID>/',views.editPass,name='editPass'),
     path('incedentEntry/',views.incedentEntry,name='incedentEntry'),
+    path('inceidentReportEntry/',views.inceidentReportEntry,name='inceidentReportEntry'),
     path('muleInspectionEntry/',views.muleInspectionEntry,name='muleInspectionEntry'),
+    path('dashBoard/',views.dashBoard,name='dashBoard'),
+
 ]
 

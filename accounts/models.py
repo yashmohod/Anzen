@@ -50,16 +50,26 @@ class inceident (models.Model):
     def __str__(self):
         return self.inceidentName
 
+class location (models.Model):
+    locationName = models.CharField(max_length=150,null=True)
+    def __str__(self):
+        return self.locationName
+
 
 class incidentReport (models.Model):
     reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
-    inceident = models.CharField(max_length=100,null=False,choices=[])
+    inceident = models.CharField(max_length=100,null=False)
     date = models.DateField(auto_now=False, auto_now_add=False,null=False)
     receivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     enrouteTime = models.TimeField(auto_now=False, auto_now_add=False,)
     arivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     clearTime = models.TimeField(auto_now=False, auto_now_add=False,)
+    location = models.CharField(max_length=150,null=False)
     summary = models.TextField()
+    def __str__(self):
+        ret = str(self.inceident)+' '+str(self.date)+' '+str(self.location)
+        return ret
+
 
     
 
@@ -70,11 +80,5 @@ class muleInspection(models.Model):
     def __str__(self):
         return str(self.reportedBy)+","+str(self.date)
 
-class academicLockup(models.Model):
-    reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
-    date = models.DateField(auto_now=False, auto_now_add=False,null=False)
-    startTime = models.TimeField(auto_now=False, auto_now_add=False,)
-    endTime = models.TimeField(auto_now=False, auto_now_add=False,)
-    summary = models.TextField()
 
 

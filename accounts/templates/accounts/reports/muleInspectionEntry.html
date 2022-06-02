@@ -7,16 +7,17 @@ Mule Inspection Entry
 
 {% block content %}
     <div class="muleInspectionEntryMain">
-        <form method="POST">
+        <form method="POST" class="muleInspectionEntryMainform">
             {% csrf_token %}
-            {{muleInspectionForm}}
-            <!-- {% for field in muleInspectionForm %}
-            <div>
-                <p>{{field.label}}</p>
-                {{field}}
+            <div class="muleInspectionEntrydiv">
+                <p>Date</p>
+                <input type="date" name="date" id="">
             </div>
-            {% endfor %} -->
-            <button type="submit">Submit</button>
+            <div class="muleInspectionEntrydiv">
+                <p>summary</p>
+                <textarea name="summary" id="" cols="30" rows="5"></textarea>
+            </div>
+            <button type="submit" class="muleInspectionEntrybutton">Submit</button>
         </form>
     </div>
 {% endblock content %}
