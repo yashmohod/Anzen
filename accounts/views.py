@@ -21,7 +21,7 @@ def userLogin(request):
   
         if user is not None :
             login(request,user)
-            return redirect('testLogin')
+            return redirect('dashBoard')
         else:
             # write code to tell user login unsccessful
             print("failed")
@@ -147,6 +147,16 @@ def muleInspectionEntry(request):
     return render(request,'accounts/reports/muleInspectionEntry.html')
 
 def dashBoard(request):
+    if request.method == 'POST':
+        print(request.POST.get('dashboardNavigationButton'))
+        if request.POST.get('dashboardNavigationButton') == '0':
+            return redirect('inceidentReportEntry')
+        elif request.POST.get('dashboardNavigationButton') == '1':
+            return redirect('muleInspectionEntry')
+        elif request.POST.get('dashboardNavigationButton') == '2':
+            # redirect('')
+            pass
+        
     return render(request,'accounts/reports/dashBoard.html')
 
 def inceidentReportEntry(request):
