@@ -1,5 +1,6 @@
 from django.urls import path
 from django.urls import re_path as url
+from django.views import View
 from . import views
 
 
@@ -13,6 +14,8 @@ urlpatterns = [
     path('inceidentReportEntry/',views.inceidentReportEntry,name='inceidentReportEntry'),
     path('muleInspectionEntry/',views.muleInspectionEntry,name='muleInspectionEntry'),
     path('dashBoard/',views.dashBoard,name='dashBoard'),
+    path('viewReports/',views.viewReports,name='viewReports'),
+    path('locations/', views.locations,name='locations' )
 
 ]
 

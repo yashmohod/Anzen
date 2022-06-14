@@ -127,10 +127,28 @@ def incedentEntry(request):
             data = request.POST
             lisst = list(data)
             dat = lisst[1]
-            buttonFunc = dat[0]
-            inceidentId = dat[1:]
+            count=0
+            buttonFunc =''
+            inceidentId =''
+            inceidenteditName =''
+            for i in dat:
+                if i != ',':
+                    if count == 0:
+                        buttonFunc=buttonFunc+i
+                    elif count == 1:
+                        inceidentId = inceidentId+i
+                    elif count == 2:
+                        inceidenteditName = inceidenteditName+i
+                else:
+                    count = count +1
+            
+            print(buttonFunc)
+            print(inceidentId)
+            print(inceidenteditName)
             if buttonFunc == '0':
-                pass
+                inceToedit = models.inceident.objects.get(id=inceidentId)
+                inceToedit.inceidentName = inceidenteditName
+                inceToedit.save()
             elif buttonFunc == '1':
                 inceToDel = models.inceident.objects.get(id=inceidentId)
                 inceToDel.delete()
@@ -176,3 +194,47 @@ def inceidentReportEntry(request):
         newinceidentReportEntry.save()
         return redirect('dashBoard')
     return render(request,'accounts/reports/inceidentReportEntry.html',{'inceidents':inceidents,'locations':locations})
+    
+
+def viewReports(request):
+
+
+    return render(request,'accounts/reports/viewReports.html')
+
+def locations(request):
+    locationsAll = models.location.objects.all()
+    if request.method =='POST':
+        if'newlocation' in request.POST:
+            location = request.POST['newlocation']
+            models.location.objects.create(locationName=location)
+        else:
+            data = request.POST
+            lisst = list(data)
+            dat = lisst[1]
+            count=0
+            buttonFunc =''
+            inceidentId =''
+            inceidenteditName =''
+            for i in dat:
+                if i != ',':
+                    if count == 0:
+                        buttonFunc=buttonFunc+i
+                    elif count == 1:
+                        inceidentId =  inceidentId+i
+                    elif count == 2:
+                        inceidenteditName =  inceidenteditName+i
+                else:
+                    count = count +1
+            
+            print(buttonFunc)
+            print(inceidentId)
+            print(inceidenteditName)
+            if buttonFunc == '0':
+                inceToedit = models.location.objects.get(id=inceidentId)
+                inceToedit.locationName = inceidenteditName
+                inceToedit.save()
+            elif buttonFunc == '1':
+                inceToDel = models.location.objects.get(id=inceidentId)
+                inceToDel.delete()
+
+    return render(request,'accounts/reports/locations.html',{'locations':locationsAll})

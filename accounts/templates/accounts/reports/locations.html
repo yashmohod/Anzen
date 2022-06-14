@@ -9,32 +9,32 @@ Inceident Entry
 <div class="inceidentFormsBody">
     <div class="inceidentAddDisplay">
         <H1 style="color:#66fcf1 ;">
-            Add Inceidents
+            Add Location
         </H1>
         <div class="inceidentAddForm">
             <form class="inceidentsAddForm" action="" method="POST">
                 {% csrf_token %}
-                <input type="text" name="newInceident" required>
-                <button type="submit" class="newInceidentButton">Add Inceident</button>
+                <input type="text" name="newlocation" required>
+                <button type="submit" class="newlocation">Add Inceident</button>
                 
             </form>
         </div>
     </div>
     <div class="inceidentsDisplay">
         <H1 style="color:#66fcf1 ;">
-            Inceidents
+            Locations
         </H1>
         <form class="inceidentsDisplayForm" action="" method="POST">
             {% csrf_token %}
             
             <table >
-                {% for inceident in inceidents %}
+                {% for location in locations %}
                 <tr>
-                    <td > {{ inceident }}</td>
+                    <td > {{ location }}</td>
                     <td>
                         <button style="display: none;" class="editButton" value="edit" name="" id="editSubmit">Edit</button>
-                        <p onclick='editInceident({{inceident.id}})' class="editButton">edit</p>
-                        <button type="submit" class="deleteButton" value="delete" name="1,{{inceident.id}}">Delete</button>
+                        <p onclick='editInceident({{location.id}})' class="editButton">edit</p>
+                        <button type="submit" class="deleteButton" value="delete" name="1,{{location.id}}">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}

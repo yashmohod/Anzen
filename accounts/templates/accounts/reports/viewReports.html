@@ -1,0 +1,60 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Records
+{% endblock header %}
+
+
+{% block content %}
+<div class="accountsDisplay">
+    <H1 style="color:#66fcf1 ;">
+        SASP Members
+    </H1>
+    <div>
+        <form action="">
+            
+            <button type="submit">Search</button>
+        </form>
+        location
+        Incident 
+        Employee 
+        date from
+        date to
+    </div>
+    <form class="accountsDisplayForm" action="" method="POST">
+        {% csrf_token %}
+        
+        <table >
+            <tr>
+                <th>date</th>
+                <th>inceident</th>
+                <th>location</th>
+                <th>receivedTime</th>
+                <th>enrouteTime</th>
+                <th>arivedTime</th>
+                <th>clearTime</th>
+                <th>reportedBy</th>
+                <th>summary</th>
+            </tr>
+            <!-- {% for user in users %}
+            <tr>
+                <td> {{ user.badgeNo }}</td>
+                <td>{{ user.firstName }}</td>
+                <td>{{ user.lastName }}</td>
+                <td>{{ user.dob }}</td>
+                <td>{{ user.collegeId }}</td>
+                <td>{{ user.status }}</td>
+                <td> {{ user.email }}</td>
+                <td>
+                    <button type="submit" class="editButton" value="edit" name="0{{user.id}}">Edit</button>
+                    <button type="submit" class="deleteButton" value="delete" name="1{{user.id}}">Delete</button>
+                </td>
+            </tr>
+            {% endfor %} -->
+
+        </table>
+        
+        
+    </form>
+</div>
+{% endblock content %}
