@@ -8,18 +8,60 @@ Records
 {% block content %}
 <div class="accountsDisplay">
     <H1 style="color:#66fcf1 ;">
-        SASP Members
+        SASP Reports
     </H1>
-    <div>
-        <form action="">
+    <div class="reportSearch">
+        <form action="" method="POST" class="reportSearchForm">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>Location</th>
+                    <th>Inceident</th>
+                    <th>Employee</th>
+                    <th>Date from</th>
+                    <th>Date To</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="Location" id="">
+                            <option value="null"></option>
+                            {% for location in locations %}
+                            <option value="{{location}}">{{location}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="inceident" id="">
+                            <option value="null"></option>
+                            {% for inceident in inceidents %}
+                            <option value="{{inceident}}">{{inceident}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select name="Employee" id="">
+                            <option value="null"></option>
+                            {% for employee in employees %}
+                            <option value="{{employee}}">{{employee}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="date" placeholder="Date from" name="dateFrom">
+                    </td>
+                    <td>
+                        <input type="date" placeholder="Date to" name="dateTo">
+                    </td>
+                    <td>
+                        <button class="SearchReportButton" type="submit" name="button" value="reportSearch">Search</button>
+                    </td>
+                </tr>
+            </table>
             
-            <button type="submit">Search</button>
+            
         </form>
-        location
-        Incident 
-        Employee 
-        date from
-        date to
+        
     </div>
     <form class="accountsDisplayForm" action="" method="POST">
         {% csrf_token %}
@@ -58,3 +100,9 @@ Records
     </form>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script>
+
+</script>
+{% endblock script %}

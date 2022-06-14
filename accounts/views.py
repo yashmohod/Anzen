@@ -10,6 +10,9 @@ from matplotlib.style import context
 from requests import request
 from . import forms,models
 from django.contrib import messages
+import datetime
+
+
 # Create your views here.
 
 def userLogin(request):
@@ -197,9 +200,18 @@ def inceidentReportEntry(request):
     
 
 def viewReports(request):
+    locationsAll = models.location.objects.all()
+    employees = models.User.objects.filter(status='Active')
+    inceidents = models.inceident.objects.all()
+    if request.method == 'POST':
+        print(request.POST)
+        dateFrom = datetime.date.fromisoformat(request.POST.get('dateFrom'))
+        dateTo = datetime.date.fromisoformat(request.POST.get('dateTo'))
+        print(dateFrom)
+        print(dateTo)
+        print(dateFrom<dateTo)
 
-
-    return render(request,'accounts/reports/viewReports.html')
+    return render(request,'accounts/reports/viewReports.html',{'locations':locationsAll,'employees':employees,'inceidents':inceidents})
 
 def locations(request):
     locationsAll = models.location.objects.all()
