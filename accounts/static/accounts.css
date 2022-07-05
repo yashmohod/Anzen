@@ -148,6 +148,7 @@ body{
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 .navBarTitle a{
   text-decoration: none;
@@ -160,6 +161,23 @@ body{
     font-size: 20px;
     color: #ffffff;
 }
+.navBarTitleText{
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.navBarTitleButtons{
+  display: flex;
+  flex-direction: row-reverse;
+  width: 100%;
+}
+.navBarTitleButtons a{
+padding-right: 20px;
+text-decoration: none;
+color: #66fcf1;
+}
+
 .mainBody{
     background-color: #1f2833 ;
     flex: 1 1 auto;
@@ -487,21 +505,44 @@ body{
   color: #ffffff;
 }
 
-
-
+.waviy {
+  position: relative;
+  -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(0,0,0,.2));
+  font-size: 60px;
+}
+.waviy span {
+  font-family: 'Alfa Slab One', cursive;
+  position: relative;
+  display: inline-block;
+  color: #66fcf1;
+  text-transform: uppercase;
+  animation: waviy 1s infinite;
+  animation-delay: calc(.1s * var(--i));
+  
+}
+@keyframes waviy {
+  0%,40%,100% {
+    transform: translateY(0)
+  }
+  20% {
+    transform: translateY(-20px)
+  }
+}
 .dashBoardGreetings{
   height: 25%;
   width: 100%;
   display: flex;
-  flex-direction:column ;
+  flex-direction:row ;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding-bottom: 5%;
+  font-size: 30px;
 }
 
 .dashBoardGreetingsText{
   color: #66fcf1;
+  -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(0,0,0,.2));
 }
 
 .dashboardNavigation{
@@ -512,7 +553,9 @@ body{
   justify-content: center;
   align-items: center;
 }
-
+a{
+  text-decoration: none;
+}
 .dassboardButtons {
   align-items: center;
   appearance: none;

@@ -1,19 +1,24 @@
 from datetime import datetime
-from pyexpat import model
-import re
-from urllib.parse import urlencode
-from django.http import HttpResponse
+from time import strftime
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
-from matplotlib.style import context
-from requests import request
 from . import forms,models
 from django.contrib import messages
 import datetime
+from django.contrib.auth.decorators import login_required
+
 
 
 # Create your views here.
+
+def home(request):
+
+    return render(request, 'accounts/public/home.html')
+
+def logout(request):
+    logout(request)
+    return redirect('home')
 
 def userLogin(request):
 
@@ -31,6 +36,8 @@ def userLogin(request):
             
     return render(request, 'accounts/account_management/login.html')
 
+
+@login_required(login_url='login')
 def register(request):
     form = forms.creatUserForm(request.POST)
     context ={'regisForm':form }
@@ -43,6 +50,8 @@ def register(request):
 
 
     return render(request,'accounts/account_management/register.html',context)
+
+@login_required(login_url='login')
 def editPass(request,userID):
     curRec = models.User.objects.get(id =userID )
     form = forms.editUserPasword(request.POST,instance= curRec )
@@ -56,7 +65,7 @@ def editPass(request,userID):
 
 
     return render(request,'accounts/account_management/editPass.html',context)
-
+@login_required(login_url='login')
 def userAccounts(request):
     print(request)
     users = models.User.objects.all()
@@ -89,11 +98,10 @@ def userAccounts(request):
                 curRec.save()
         elif buttonFunc == '3':
             redirect_url = reverse('editPass', args=[userID])
-            # parameters = urlencode(curRec)
             return redirect(redirect_url)
 
     return render(request,'accounts/account_management/userAccounts.html',context)
-
+@login_required(login_url='login')
 def editUser(request,userID,backurl):
 
     curRec = models.User.objects.get(id =userID)
@@ -119,8 +127,8 @@ def editUser(request,userID,backurl):
 
     return render(request,'accounts/account_management/editUser.html',{'user':curRec, 'backurl':backurl})
 
-
-def incedentEntry(request):
+@login_required(login_url='login')
+def incidentEntry(request):
     inceidents = models.inceident.objects.all()
     if request.method =='POST':
         if'newInceident' in request.POST:
@@ -158,7 +166,7 @@ def incedentEntry(request):
 
     return render(request,'accounts/reports/inceidentsEntry.html',{'inceidents':inceidents})
 
-
+@login_required(login_url='login')
 def muleInspectionEntry(request):
     
     if request.method == 'POST':
@@ -167,20 +175,13 @@ def muleInspectionEntry(request):
         return redirect('dashBoard')
     return render(request,'accounts/reports/muleInspectionEntry.html')
 
+@login_required(login_url='login')
 def dashBoard(request):
-    if request.method == 'POST':
-        print(request.POST.get('dashboardNavigationButton'))
-        if request.POST.get('dashboardNavigationButton') == '0':
-            return redirect('inceidentReportEntry')
-        elif request.POST.get('dashboardNavigationButton') == '1':
-            return redirect('muleInspectionEntry')
-        elif request.POST.get('dashboardNavigationButton') == '2':
-            # redirect('')
-            pass
-        
+  
     return render(request,'accounts/reports/dashBoard.html')
 
-def inceidentReportEntry(request):
+@login_required(login_url='login')
+def incidentReportEntry(request):
     inceidents=models.inceident.objects.all()
     locations = models.location.objects.all()
     if request.method == 'POST':
@@ -197,22 +198,125 @@ def inceidentReportEntry(request):
         newinceidentReportEntry.save()
         return redirect('dashBoard')
     return render(request,'accounts/reports/inceidentReportEntry.html',{'inceidents':inceidents,'locations':locations})
-    
 
+
+@login_required(login_url='login')
+def incidentReportEdit(request, entryID):
+    inc= models.inceident.objects.all()
+    loc = models.location.objects.all()
+    incidentReport = models.incidentReport.objects.get(id=entryID)
+    inceidents =[]
+    locations = []
+    for l in loc:
+        locations.append(str(l))
+    for i in inc:
+        inceidents.append(str(i))
+    print(request.POST)
+    return render(request,'accounts/reports/inceidentReportEdiit.html',{'inceidents':inceidents,'locations':locations,'incidentReport':incidentReport})
+
+
+
+@login_required(login_url='login')
 def viewReports(request):
     locationsAll = models.location.objects.all()
     employees = models.User.objects.filter(status='Active')
     inceidents = models.inceident.objects.all()
+    incidentReports=[]
+    hiddenVal=[]
+    searchall=0
+    if request.POST.get('button') == 'all':
+        searchall =1
+
     if request.method == 'POST':
+        hiddenVal = {'Location':request.POST.get('Location'),'inceident':request.POST.get('inceident'),'Employee':request.POST.get('Employee'),'dateFrom':request.POST.get('dateFrom'),'dateTo' :request.POST.get('dateTo'),'searchAll' :searchall}
         print(request.POST)
-        dateFrom = datetime.date.fromisoformat(request.POST.get('dateFrom'))
-        dateTo = datetime.date.fromisoformat(request.POST.get('dateTo'))
+        if request.POST.get('button') == 'reportSearch':
+            incidentReports = viewincidentReports(request)
+            
+        elif request.POST.get('button') == 'all':
+            incidentReports = models.incidentReport.objects.all()
+        else:
+            if request.POST.get('delete') != None:
+                incidentReport = models.incidentReport.objects.get(id=request.POST.get('delete'))
+                incidentReport.delete()
+                incidentReports = viewincidentReportsFil(request.POST.get('Location'),request.POST.get('inceident'),request.POST.get('Employee'),request.POST.get('dateFrom'),request.POST.get('dateTo'),request.POST.get('searchAll'))
+            if  request.POST.get('edit') != None:
+                id=request.POST.get('edit')
+                redirect_url = reverse('incidentReportEdit', args=[id])
+                return redirect(redirect_url)
+
+    return render(request,'accounts/reports/viewReports.html',{'locations':locationsAll,'employees':employees,'inceidents':inceidents,'incidentReports':incidentReports,"hiddenVal":hiddenVal})
+
+    
+def viewincidentReports(request):
+    incidentReports = models.incidentReport.objects.all()
+    count =5
+    if request.POST.get('Location') != 'null':
+        count = count-1
+        incidentReports = incidentReports.filter(location=request.POST.get('Location'))
+
+    if request.POST.get('inceident') != 'null':
+        count = count-1
+        incidentReports = incidentReports.filter(inceident=request.POST.get('inceident'))
+
+    if request.POST.get('Employee') != 'null': 
+        count = count-1 
+        incidentReports = incidentReports.filter(reportedBy__id=request.POST.get('Employee') )
+    
+    if request.POST.get('dateFrom') !='' and request.POST.get('dateTo')!='':
+        count = count-1
+        incidentReports = incidentReports.filter(date__range=[request.POST.get('dateFrom'),request.POST.get('dateTo')])
+    elif request.POST.get('dateFrom') !='':
+        count = count-1
+        dateFrom = strftime(request.POST.get('dateFrom'))
         print(dateFrom)
-        print(dateTo)
-        print(dateFrom<dateTo)
+        print(type(dateFrom))
+        incidentReports = incidentReports.filter(date__gte=dateFrom)
+    elif request.POST.get('dateTo')!='':
+        count = count-1
+        dateTo = strftime(request.POST.get('dateTo'))
+        incidentReports = incidentReports.filter(date__lte=dateTo)
+    if count == 5:
+        incidentReports=[]
+    return incidentReports
 
-    return render(request,'accounts/reports/viewReports.html',{'locations':locationsAll,'employees':employees,'inceidents':inceidents})
+def viewincidentReportsFil(Location,inceident,Employee,DateFrom,DateTo,searchall):
+    incidentReports = models.incidentReport.objects.all()
+    if searchall ==0:
 
+        count =5
+        if Location != 'null':
+            count = count-1
+            incidentReports = incidentReports.filter(location=Location)
+
+        if inceident != 'null':
+            count = count-1
+            incidentReports = incidentReports.filter(inceident=inceident)
+
+        if Employee != 'null': 
+            count = count-1 
+            incidentReports = incidentReports.filter(reportedBy__id=Employee )
+        
+        if DateFrom !='' and DateTo!='':
+            count = count-1
+            incidentReports = incidentReports.filter(date__range=[DateFrom,DateTo])
+        elif DateFrom !='':
+            count = count-1
+            dateFrom = strftime(DateFrom)
+            print(dateFrom)
+            print(type(dateFrom))
+            incidentReports = incidentReports.filter(date__gte=dateFrom)
+        elif DateTo!='':
+            count = count-1
+            dateTo = strftime(DateTo)
+            incidentReports = incidentReports.filter(date__lte=dateTo)
+        if count == 5:
+            incidentReports=[]
+    return incidentReports
+
+
+
+@login_required(login_url='login')
 def locations(request):
     locationsAll = models.location.objects.all()
     if request.method =='POST':

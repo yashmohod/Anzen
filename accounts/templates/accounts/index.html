@@ -14,14 +14,29 @@
 <body>
     <div class='navBar'>
         <div class="navBarTitle">
-            <a href=""><img src="{% static 'imgs/title.gif' %}" alt="" srcset=""></a>
-            <h2>SASP</h2>
+            <div class="navBarTitleText">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'dashBoard' %}"><img src="{% static 'imgs/title.gif' %}" alt="" srcset=""></a>
+                {% else %}
+                    <a href="{% url 'home' %}"><img src="{% static 'imgs/title.gif' %}" alt="" srcset=""></a>
+                {% endif %} 
+                <h2>SASP</h2>
+            </div>
+            <div class="navBarTitleButtons">
+                {% block log %}
+                    {% if request.user.is_authenticated %}
+                        <a href="{% url 'logout' %}">
+                            Log out
+                        </a>
+                    {% else %}
+                        <a href="{% url 'login' %}">
+                            Log in
+                        </a>
+                    {% endif %} 
+                {% endblock %}
+
+            </div>
         </div>
-        <!-- <div class="logout">
-            <button class="logoutButton">
-                logout
-            </button>
-        </div> -->
     </div>
 
     <div class="mainBody">

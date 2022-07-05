@@ -7,29 +7,58 @@ Dashboard
 
 {% block content %}
     <div class="dashBoardGreetings">
-        <div>
-            <p class="dashBoardGreetingsText">Hi {{user.firstName}}</p>
-        </div>
+        <div class="waviy">
+            <span style="--i:1">H</span>
+            <span style="--i:2">I</span>
+            </div>
+        <p class="dashBoardGreetingsText" style="margin-left: 10px;">{{user.firstName}}</p>
     </div>
     <div class="dashboardNavigation">
-        <form action="" class="dashboardNavigation" method="POST">
-            {% csrf_token %}
-            <div>
+
+        <div>
+            <a href="{% url 'incidentReportEntry' %}">
                 <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
-                    Daily
+                Daily
                 </button>
-            </div>
-            <div>
-                <button class="dassboardButtons" name="dashboardNavigationButton" value="1">
-                    Mule Inspection
-                </button>
-            </div>
-            <div>
-                <button class="dassboardButtons" name="dashboardNavigationButton" value="2">
+            </a>
+        </div>
+        <div>
+            <a href="{% url 'viewReports' %}">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
                     Records
                 </button>
+            </a>
+        </div>
+        {% if user.is_superuser %}
+            <div>
+                <a href="{% url 'incidentEntry' %}">
+                    <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                        Incidents
+                    </button>
+                </a>
             </div>
-        </form>
-
+            <div>
+                <a href="{% url 'locations' %}">
+                    <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                        Locations
+                    </button>
+                </a>
+            </div>
+            <div>
+                <a href="{% url 'userAccounts' %}">
+                    <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                        Employee Accounts
+                    </button>
+                </a>    
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}
+
+{% block script %}
+<script >
+
+
+
+</script>
+{% endblock script %}

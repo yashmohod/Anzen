@@ -1,6 +1,3 @@
-from datetime import date
-from pyexpat import model
-from statistics import mode
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -73,12 +70,6 @@ class incidentReport (models.Model):
 
     
 
-class muleInspection(models.Model):
-    reportedBy  = models.ForeignKey(User,null=False,on_delete=models.PROTECT)
-    date = models.DateField(auto_now=False, auto_now_add=False,null=False)
-    summary = models.TextField()
-    def __str__(self):
-        return str(self.reportedBy)+","+str(self.date)
 
 
 

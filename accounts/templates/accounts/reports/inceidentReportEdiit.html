@@ -10,44 +10,53 @@ Daily
         <form method="POST" class="incedentReportEntryMainform">
             {% csrf_token %}
             <div>
+                <input type="text" name="reportedBy" id="reportedBy" value="{{incidentReport.reportedBy}}" style="display: none;">
                 <p>Inceident</p>
                 <select name="inceident" id="">
-                    {% for inceident  in inceidents  %}
-                        <option value='{{inceident.inceidentName}}'>{{inceident.inceidentName}}</option>
+                    {% for inceident  in inceidents %}
+                        {% if inceident == incidentReport.inceident %}
+                            <option value='{{inceident}}' selected="selected">{{inceident}}</option>
+                        {% else %}
+                            <option value='{{inceident}}'>{{inceident}}</option> 
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
             <div>
                 <p>Date</p>
-                <input type="date" name="date" id="date" onclick="dateMaxSet();" required max="today">
+                <input type="date" name="date" id="date" onclick="dateMaxSet();"  required max="today">
             </div>
             <div>
                 <p>ReceivedTime</p>
-                <input type="text" pattern="[0-23]{2}:[0-59]{2}" oninput ="check_time(this.value,'receivedTime');" name="receivedTime" id="receivedTime" maxlength="5" required >
+                <input type="text" pattern="[0-23]{2}:[0-59]{2}" oninput ="check_time(this.value,'receivedTime');" name="receivedTime" id="receivedTime" maxlength="5" value="{{incidentReport.receivedTime |date:"G:i"}}" required >
             </div>
             <div>
                 <p>EnrouteTime</p>
-                <input type="text" name="enrouteTime" oninput ="check_time(this.value,'enrouteTime');" id="enrouteTime" maxlength="5" required>
+                <input type="text" name="enrouteTime" oninput ="check_time(this.value,'enrouteTime');" id="enrouteTime" maxlength="5" value="{{incidentReport.enrouteTime |date:"G:i"}}" required>
             </div>
             <div>
                 <p>ArivedTime</p>
-                <input type="text" name="arivedTime" oninput ="check_time(this.value,'arivedTime');" id="arivedTime" maxlength="5" required>
+                <input type="text" name="arivedTime" oninput ="check_time(this.value,'arivedTime');" id="arivedTime" maxlength="5" value="{{incidentReport.arivedTime |date:"G:i"}}" required>
             </div>
             <div>
                 <p>ClearTime</p>
-                <input type="text" name="clearTime" oninput ="check_time(this.value,'clearTime');"id="clearTime" maxlength="5" required>
+                <input type="text" name="clearTime" oninput ="check_time(this.value,'clearTime');"id="clearTime" maxlength="5" value="{{incidentReport.clearTime |date:"G:i"}}" required>
             </div>
             <div>
                 <p>Location</p>
                 <select name="location" id="">
-                    {% for location  in locations  %}
-                        <option value='{{location}}'>{{location}}</option>
+                    {% for location  in locations %}
+                        {% if location == incidentReport.location %}
+                            <option value='{{location}}' selected="selected">{{location}}</option>
+                        {% else %}
+                            <option value='{{location}}' >{{location}}</option> 
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
             <div>
                 <p>summary</p>
-                <textarea name="summary" id="" cols="30" rows="5"></textarea>
+                <textarea name="summary" id="" cols="30" rows="5">{{incidentReport.summary}}</textarea>
             </div>
                         
             <button type="submit" class="muleInspectionEntrybutton">Submit</button>
@@ -57,6 +66,15 @@ Daily
 
 {% block script %}
 <script >
+    window.onload = function funLoad() { 
+        var date = "{{incidentReport.date|date:"Y-m-d"}}";
+        const dateElem = document.getElementById("date");
+        dateElem.value = date;
+        console.log(typeof date);
+    } 
+
+
+
     function dateMaxSet(){
         // get todays date
         var today = new Date();

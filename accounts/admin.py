@@ -6,5 +6,4 @@ from accounts import models
 admin.site.register(models.User)
 admin.site.register(models.inceident)
 admin.site.register(models.incidentReport)
-admin.site.register(models.muleInspection)
 admin.site.register(models.location)

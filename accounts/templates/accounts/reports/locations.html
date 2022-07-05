@@ -15,7 +15,7 @@ Inceident Entry
             <form class="inceidentsAddForm" action="" method="POST">
                 {% csrf_token %}
                 <input type="text" name="newlocation" required>
-                <button type="submit" class="newlocation">Add Inceident</button>
+                <button type="submit" class="newInceidentButton">Add Location</button>
                 
             </form>
         </div>
@@ -33,7 +33,7 @@ Inceident Entry
                     <td > {{ location }}</td>
                     <td>
                         <button style="display: none;" class="editButton" value="edit" name="" id="editSubmit">Edit</button>
-                        <p onclick='editInceident({{location.id}})' class="editButton">edit</p>
+                        <p onclick='editInceident({{location.id}},"{{ location }}")' class="editButton">edit</p>
                         <button type="submit" class="deleteButton" value="delete" name="1,{{location.id}}">Delete</button>
                     </td>
                 </tr>
@@ -49,9 +49,14 @@ Inceident Entry
 
 {% block script %}
 <script>
-    function editInceident( id){
-        var inceident = String(window.prompt("Enter the updated name ", ""));
-        inceident = '0'+','+id+','+inceident;
+    function editInceident( id,name){
+
+        var inceident = String(window.prompt("Enter the updated name", name));
+        if (inceident =="null"){
+            inceident = '0'+','+id+','+name;
+        }else{
+            inceident = '0'+','+id+','+inceident;
+        }
         const editButton = document.getElementById('editSubmit');
         editButton.setAttribute('name', inceident);
         editButton.click();

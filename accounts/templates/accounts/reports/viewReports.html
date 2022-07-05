@@ -20,7 +20,12 @@ Records
                     <th>Employee</th>
                     <th>Date from</th>
                     <th>Date To</th>
-                    <th></th>
+                    <th>
+                        <button type="submit" class="SearchReportButton" name="button" value="all">Show All</button>
+                        {% if incidentReports %}
+                        <button type="button" class="SearchReportButton" id="download-button" value="" >Download File</button>
+                        {% endif %}
+                    </th>
                 </tr>
                 <tr>
                     <td>
@@ -34,6 +39,7 @@ Records
                     <td>
                         <select name="inceident" id="">
                             <option value="null"></option>
+                            
                             {% for inceident in inceidents %}
                             <option value="{{inceident}}">{{inceident}}</option>
                             {% endfor %}
@@ -43,7 +49,7 @@ Records
                         <select name="Employee" id="">
                             <option value="null"></option>
                             {% for employee in employees %}
-                            <option value="{{employee}}">{{employee}}</option>
+                            <option value="{{employee.id}}">{{employee}}</option>
                             {% endfor %}
                         </select>
                     </td>
@@ -63,46 +69,99 @@ Records
         </form>
         
     </div>
-    <form class="accountsDisplayForm" action="" method="POST">
-        {% csrf_token %}
+   
         
-        <table >
-            <tr>
-                <th>date</th>
-                <th>inceident</th>
-                <th>location</th>
-                <th>receivedTime</th>
-                <th>enrouteTime</th>
-                <th>arivedTime</th>
-                <th>clearTime</th>
-                <th>reportedBy</th>
-                <th>summary</th>
-            </tr>
-            <!-- {% for user in users %}
-            <tr>
-                <td> {{ user.badgeNo }}</td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.dob }}</td>
-                <td>{{ user.collegeId }}</td>
-                <td>{{ user.status }}</td>
-                <td> {{ user.email }}</td>
-                <td>
-                    <button type="submit" class="editButton" value="edit" name="0{{user.id}}">Edit</button>
-                    <button type="submit" class="deleteButton" value="delete" name="1{{user.id}}">Delete</button>
-                </td>
-            </tr>
-            {% endfor %} -->
+    <table id='data' >
+        <tr>
+            <th>Date</th>
+            <th>Inceident</th>
+            <th>Location</th>
+            <th>Received Time</th>
+            <th>Enroute Time</th>
+            <th>Arrived Time</th>
+            <th>Clear Time</th>
+            <th>Reported By</th>
+            <th>Summary</th>
+            <th></th>
+        </tr>
+        {% for incidentReport in incidentReports %}
+        <tr>
+            <td > {{ incidentReport.date }}</td>
+            <td>{{ incidentReport.inceident }}</td>
+            <td>{{ incidentReport.location }}</td>
+            <td>{{ incidentReport.receivedTime | date:"G:i" }}</td>
+            <td>{{ incidentReport.enrouteTime | date:"G:i"  }}</td>
+            <td>{{ incidentReport.arivedTime | date:"G:i"  }}</td>
+            <td> {{ incidentReport.clearTime | date:"G:i"  }}</td>
+            <td>{{ incidentReport.reportedBy }}</td>
+            <td>
+                <textarea rows="4" cols="50" readonly style="resize: none;">
+                    {{ incidentReport.summary }}
+                </textarea>
+            </td>
+            <td>
+                <form  action="" method="POST">
+                    {% csrf_token %}
+                    <input  name="Location" id=""  value="{{hiddenVal.Location}}" style="display: None;">
+                    <input  name="inceident" id=""  value="{{hiddenVal.inceident}}" style="display: None;">
+                    <input name="Employee" id=""  value="{{hiddenVal.Employee}}" style="display: None;">
+                    <input  name="dateFrom" id=""  value="{{hiddenVal.dateFrom}}"style="display: None;">
+                    <input  name="dateTo" id=""  value="{{hiddenVal.dateTo}}" style="display: None;">
+                    <input  name="searchAll" id=""  value="{{hiddenVal.searchAll}}" style="display: None;">
+                    <button type="submit" class="editButton" name="edit" value="{{incidentReport.id}}">Edit</button>
+                    <button type="submit" class="deleteButton" name="delete" value="{{incidentReport.id}}">Delete</button>
+                    </form>
+            </td>
+            
+        </tr>
+        {% endfor %}
 
-        </table>
+    </table>
         
-        
-    </form>
 </div>
 {% endblock content %}
 
 {% block script %}
 <script>
+
+    document.getElementById("download-button").addEventListener("click", function () {
+        download_table_as_csv("data");
+    });
+
+    // Quick and simple export target #table_id into a csv
+function download_table_as_csv(table_id, separator = ',') {
+    // Select rows from table_id
+    var rows = document.querySelectorAll('table#' + table_id + ' tr');
+    // Construct csv
+    var csv = [];
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll('td, th');
+        for (var j = 0; j < cols.length-1; j++) {
+            // Clean innertext to remove multiple spaces and jumpline (break csv)
+            var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+            if(j==8 && i >0){
+                data= cols[j].getElementsByTagName("textarea")[0].innerHTML;
+            }
+
+            // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
+            data = data.replace(/"/g, '""');
+            // Push escaped string
+            row.push('"' + data + '"');
+        }
+        csv.push(row.join(separator));
+    }
+    var csv_string = csv.join('\n');
+    // Download it
+    var filename = 'SaspData.csv';
+    var link = document.createElement('a');
+    link.style.display = 'none';
+    link.setAttribute('target', '_blank');
+    link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 </script>
 {% endblock script %}
