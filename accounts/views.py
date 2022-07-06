@@ -1,11 +1,9 @@
-from datetime import datetime
 from time import strftime
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 from . import forms,models
 from django.contrib import messages
-import datetime
 from django.contrib.auth.decorators import login_required
 
 
@@ -212,6 +210,20 @@ def incidentReportEdit(request, entryID):
     for i in inc:
         inceidents.append(str(i))
     print(request.POST)
+    if request.method == "POST":
+        incidentReport.reportedBy  = models.User.objects.get(id=request.POST.get("reportedBy"))
+        incidentReport.inceident = request.POST.get("inceident")
+        incidentReport.date = request.POST.get("date")
+        incidentReport.receivedTime = request.POST.get("receivedTime")
+        incidentReport.enrouteTime = request.POST.get("enrouteTime")
+        incidentReport.arivedTime = request.POST.get("arivedTime")
+        incidentReport.clearTime = request.POST.get("clearTime")
+        incidentReport.location = request.POST.get("location")
+        incidentReport.summary = request.POST.get("summary")
+        incidentReport.save()
+        return redirect("viewReports")
+        
+    
     return render(request,'accounts/reports/inceidentReportEdiit.html',{'inceidents':inceidents,'locations':locations,'incidentReport':incidentReport})
 
 

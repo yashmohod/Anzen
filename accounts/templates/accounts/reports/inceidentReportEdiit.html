@@ -10,7 +10,7 @@ Daily
         <form method="POST" class="incedentReportEntryMainform">
             {% csrf_token %}
             <div>
-                <input type="text" name="reportedBy" id="reportedBy" value="{{incidentReport.reportedBy}}" style="display: none;">
+                <input type="text" name="reportedBy" id="reportedBy" value="{{incidentReport.reportedBy.id}}" style="display: none;">
                 <p>Inceident</p>
                 <select name="inceident" id="">
                     {% for inceident  in inceidents %}
@@ -59,7 +59,7 @@ Daily
                 <textarea name="summary" id="" cols="30" rows="5">{{incidentReport.summary}}</textarea>
             </div>
                         
-            <button type="submit" class="muleInspectionEntrybutton">Submit</button>
+            <button type="submit"  class="muleInspectionEntrybutton">Submit</button>
         </form>
     </div>
 {% endblock content %}
