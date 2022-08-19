@@ -1,14 +1,14 @@
 {% extends 'accounts/index.html' %}
 
 {% block header %}
-Inceident Entry
+Location Entry
 {% endblock header %}
 
 
 {% block content %}
 <div class="inceidentFormsBody">
     <div class="inceidentAddDisplay">
-        <H1 style="color:#66fcf1 ;">
+        <H1 class="colourBlue">
             Add Location
         </H1>
         <div class="inceidentAddForm">
@@ -16,42 +16,59 @@ Inceident Entry
                 {% csrf_token %}
                 <input type="text" name="newlocation" required>
                 <button type="submit" class="newInceidentButton">Add Location</button>
-                
+
             </form>
         </div>
     </div>
     <div class="inceidentsDisplay">
-        <H1 style="color:#66fcf1 ;">
+        <H1 class="colourBlue">
             Locations
         </H1>
         <form class="inceidentsDisplayForm" action="" method="POST">
             {% csrf_token %}
-            
-            <table >
+            <div class="scroll">
+            <table>
                 {% for location in locations %}
                 <tr>
                     <td > {{ location }}</td>
                     <td>
-                        <button style="display: none;" class="editButton" value="edit" name="" id="editSubmit">Edit</button>
-                        <p onclick='editInceident({{location.id}},"{{ location }}")' class="editButton">edit</p>
+                        <button  class="hidden" value="edit" name="" id="editSubmit">Edit</button>
+                        <button type="button"  name='{{location}}' id ="{{ location.id }}"  class="editButton">Edit</button>
                         <button type="submit" class="deleteButton" value="delete" name="1,{{location.id}}">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
 
             </table>
-            
-            
+            </div>
+
+
         </form>
     </div>
 </div>
 {% endblock content %}
 
 {% block script %}
-<script>
+<script nonce="{{request.csp_nonce}}">
+
+    document.addEventListener('click', (e) => {
+        let element = e.target;
+        if(element.tagName == "BUTTON"){
+
+            editInceident(`${element.id}`,`${element.name}`);
+        }
+    });
+
+
+
     function editInceident( id,name){
 
         var inceident = String(window.prompt("Enter the updated name", name));
+        console.log(inceident);
+        if (inceident == 'null') {
+        return; //break out of the function early
+    }
+
         if (inceident =="null"){
             inceident = '0'+','+id+','+name;
         }else{
@@ -62,6 +79,6 @@ Inceident Entry
         editButton.click();
     }
 
-  
+
 </script>
 {% endblock script %}

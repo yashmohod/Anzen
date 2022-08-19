@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!gu_uhc83u=ka0u=mts5sij$lwv9v)@c^6ya!ey*$=!ym4vf*5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["Grizzliyash.pythonanywhere.com"]
 
@@ -146,3 +146,4 @@ CSP_STYLE_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'",)
 CSP_IMG_SRC = ("'self'",)
 CSP_FONT_SRC = ("'self'",)
+CSP_INCLUDE_NONCE_IN=['script-src','style-src']

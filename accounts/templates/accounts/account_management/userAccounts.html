@@ -8,12 +8,12 @@ Accounts
 {% block content %}
 
     <div class="accountsDisplay">
-        <H1 style="color:#66fcf1 ;">
+        <H1 style="colourBlue">
             SASP Members
         </H1>
         <form class="accountsDisplayForm" action="" method="POST">
             {% csrf_token %}
-            
+
             <table >
                 <tr>
                     <th>Badge No.</th>
@@ -44,14 +44,14 @@ Accounts
                 {% endfor %}
 
             </table>
-            
-            
+
+
         </form>
     </div>
 {% endblock content %}
 
 {% block script %}
 <script>
-    
+
 </script>
 {% endblock script %}

@@ -8,10 +8,10 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 class CustomAccountManager(BaseUserManager):
 
     def create_superuser(self,email,password, **other_fields):
-        
+
         other_fields.setdefault('is_superuser',True)
         other_fields.setdefault('is_staff',True)
-        
+
         return self.create_user(email,password, **other_fields)
 
     def create_user(self,email,password, **other_fields):
@@ -34,10 +34,10 @@ class User(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField( max_length=254, unique=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=True)
-    objects= CustomAccountManager() 
+    objects= CustomAccountManager()
 
     USERNAME_FIELD = 'email'
-    
+
     def __str__(self):
         ret = str(self.firstName)+","+str(self.lastName)
         return ret
@@ -62,13 +62,14 @@ class incidentReport (models.Model):
     arivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     clearTime = models.TimeField(auto_now=False, auto_now_add=False,)
     location = models.CharField(max_length=150,null=False)
+
     summary = models.TextField()
     def __str__(self):
         ret = str(self.inceident)+' '+str(self.date)+' '+str(self.location)
         return ret
 
 
-    
+
 
 
 

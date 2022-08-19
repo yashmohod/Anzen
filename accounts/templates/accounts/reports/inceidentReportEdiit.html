@@ -11,13 +11,13 @@ Daily
             {% csrf_token %}
             <div>
                 <input type="text" name="reportedBy" id="reportedBy" value="{{incidentReport.reportedBy.id}}" style="display: none;">
-                <p>Inceident</p>
+                <p>Incident</p>
                 <select name="inceident" id="">
                     {% for inceident  in inceidents %}
                         {% if inceident == incidentReport.inceident %}
                             <option value='{{inceident}}' selected="selected">{{inceident}}</option>
                         {% else %}
-                            <option value='{{inceident}}'>{{inceident}}</option> 
+                            <option value='{{inceident}}'>{{inceident}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
@@ -49,29 +49,33 @@ Daily
                         {% if location == incidentReport.location %}
                             <option value='{{location}}' selected="selected">{{location}}</option>
                         {% else %}
-                            <option value='{{location}}' >{{location}}</option> 
+                            <option value='{{location}}' >{{location}}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
             </div>
             <div>
+                <p>Location Detail</p>
+                <input type="text" name="locationDetail" id="locationDetail" value="{{incidentReport.locationDetail}}" >
+            </div>
+            <div>
                 <p>summary</p>
                 <textarea name="summary" id="" cols="30" rows="5">{{incidentReport.summary}}</textarea>
             </div>
-                        
+
             <button type="submit"  class="muleInspectionEntrybutton">Submit</button>
         </form>
     </div>
 {% endblock content %}
 
 {% block script %}
-<script >
-    window.onload = function funLoad() { 
+<script nonce="{{request.csp_nonce}}">
+    window.onload = function funLoad() {
         var date = "{{incidentReport.date|date:"Y-m-d"}}";
         const dateElem = document.getElementById("date");
         dateElem.value = date;
         console.log(typeof date);
-    } 
+    }
 
 
 

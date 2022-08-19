@@ -24,14 +24,14 @@ def userLogin(request):
         email = request.POST['email']
         password = request.POST['password']
         user = authenticate( request,email=email, password= password)
-  
+
         if user is not None :
             login(request,user)
             return redirect('dashBoard')
         else:
             # write code to tell user login unsccessful
             print("failed")
-            
+
     return render(request, 'accounts/account_management/login.html')
 
 
@@ -62,7 +62,7 @@ def editPass(request,userID):
             messages.error(request,"Passwords did not match or were two short.")
 
 
-    return render(request,'accounts/account_management/editPass.html',context)
+    return render(request,'accounts/account_management/editpass.html',context)
 @login_required(login_url='login')
 def userAccounts(request):
     print(request)
@@ -150,7 +150,7 @@ def incidentEntry(request):
                         inceidenteditName = inceidenteditName+i
                 else:
                     count = count +1
-            
+
             print(buttonFunc)
             print(inceidentId)
             print(inceidenteditName)
@@ -164,18 +164,11 @@ def incidentEntry(request):
 
     return render(request,'accounts/reports/inceidentsEntry.html',{'inceidents':inceidents})
 
-@login_required(login_url='login')
-def muleInspectionEntry(request):
-    
-    if request.method == 'POST':
-        newentry = models.muleInspection(reportedBy = request.user,date=request.POST.get('date'),summary =request.POST.get('summary') )
-        newentry.save()
-        return redirect('dashBoard')
-    return render(request,'accounts/reports/muleInspectionEntry.html')
+
 
 @login_required(login_url='login')
 def dashBoard(request):
-  
+
     return render(request,'accounts/reports/dashBoard.html')
 
 @login_required(login_url='login')
@@ -188,9 +181,10 @@ def incidentReportEntry(request):
         date =request.POST.get('date'),
         receivedTime =request.POST.get('receivedTime'),
         enrouteTime =request.POST.get('enrouteTime'),
-        arivedTime =request.POST.get('arivedTime'), 
+        arivedTime =request.POST.get('arivedTime'),
         clearTime =request.POST.get('clearTime'),
         location = request.POST.get('location'),
+
         summary =request.POST.get('summary')
         )
         newinceidentReportEntry.save()
@@ -219,11 +213,12 @@ def incidentReportEdit(request, entryID):
         incidentReport.arivedTime = request.POST.get("arivedTime")
         incidentReport.clearTime = request.POST.get("clearTime")
         incidentReport.location = request.POST.get("location")
+        i
         incidentReport.summary = request.POST.get("summary")
         incidentReport.save()
         return redirect("viewReports")
-        
-    
+
+
     return render(request,'accounts/reports/inceidentReportEdiit.html',{'inceidents':inceidents,'locations':locations,'incidentReport':incidentReport})
 
 
@@ -244,7 +239,7 @@ def viewReports(request):
         print(request.POST)
         if request.POST.get('button') == 'reportSearch':
             incidentReports = viewincidentReports(request)
-            
+
         elif request.POST.get('button') == 'all':
             incidentReports = models.incidentReport.objects.all()
         else:
@@ -259,7 +254,7 @@ def viewReports(request):
 
     return render(request,'accounts/reports/viewReports.html',{'locations':locationsAll,'employees':employees,'inceidents':inceidents,'incidentReports':incidentReports,"hiddenVal":hiddenVal})
 
-    
+
 def viewincidentReports(request):
     incidentReports = models.incidentReport.objects.all()
     count =5
@@ -271,10 +266,10 @@ def viewincidentReports(request):
         count = count-1
         incidentReports = incidentReports.filter(inceident=request.POST.get('inceident'))
 
-    if request.POST.get('Employee') != 'null': 
-        count = count-1 
+    if request.POST.get('Employee') != 'null':
+        count = count-1
         incidentReports = incidentReports.filter(reportedBy__id=request.POST.get('Employee') )
-    
+
     if request.POST.get('dateFrom') !='' and request.POST.get('dateTo')!='':
         count = count-1
         incidentReports = incidentReports.filter(date__range=[request.POST.get('dateFrom'),request.POST.get('dateTo')])
@@ -305,10 +300,10 @@ def viewincidentReportsFil(Location,inceident,Employee,DateFrom,DateTo,searchall
             count = count-1
             incidentReports = incidentReports.filter(inceident=inceident)
 
-        if Employee != 'null': 
-            count = count-1 
+        if Employee != 'null':
+            count = count-1
             incidentReports = incidentReports.filter(reportedBy__id=Employee )
-        
+
         if DateFrom !='' and DateTo!='':
             count = count-1
             incidentReports = incidentReports.filter(date__range=[DateFrom,DateTo])
@@ -353,7 +348,7 @@ def locations(request):
                         inceidenteditName =  inceidenteditName+i
                 else:
                     count = count +1
-            
+
             print(buttonFunc)
             print(inceidentId)
             print(inceidenteditName)

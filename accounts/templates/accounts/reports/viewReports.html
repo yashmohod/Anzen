@@ -7,7 +7,7 @@ Records
 
 {% block content %}
 <div class="accountsDisplay">
-    <H1 style="color:#66fcf1 ;">
+    <H1 class="colourBlue">
         SASP Reports
     </H1>
     <div class="reportSearch">
@@ -16,7 +16,7 @@ Records
             <table>
                 <tr>
                     <th>Location</th>
-                    <th>Inceident</th>
+                    <th>Incident</th>
                     <th>Employee</th>
                     <th>Date from</th>
                     <th>Date To</th>
@@ -39,7 +39,7 @@ Records
                     <td>
                         <select name="inceident" id="">
                             <option value="null"></option>
-                            
+
                             {% for inceident in inceidents %}
                             <option value="{{inceident}}">{{inceident}}</option>
                             {% endfor %}
@@ -64,18 +64,19 @@ Records
                     </td>
                 </tr>
             </table>
-            
-            
+
+
         </form>
-        
+
     </div>
-   
-        
+
+
     <table id='data' >
         <tr>
             <th>Date</th>
-            <th>Inceident</th>
+            <th>Incident</th>
             <th>Location</th>
+            <th>Location Detail</th>
             <th>Received Time</th>
             <th>Enroute Time</th>
             <th>Arrived Time</th>
@@ -89,6 +90,7 @@ Records
             <td > {{ incidentReport.date }}</td>
             <td>{{ incidentReport.inceident }}</td>
             <td>{{ incidentReport.location }}</td>
+            <td>{{ incidentReport.locationDetail }}</td>
             <td>{{ incidentReport.receivedTime | date:"G:i" }}</td>
             <td>{{ incidentReport.enrouteTime | date:"G:i"  }}</td>
             <td>{{ incidentReport.arivedTime | date:"G:i"  }}</td>
@@ -102,27 +104,30 @@ Records
             <td>
                 <form  action="" method="POST">
                     {% csrf_token %}
-                    <input  name="Location" id=""  value="{{hiddenVal.Location}}" style="display: None;">
-                    <input  name="inceident" id=""  value="{{hiddenVal.inceident}}" style="display: None;">
-                    <input name="Employee" id=""  value="{{hiddenVal.Employee}}" style="display: None;">
-                    <input  name="dateFrom" id=""  value="{{hiddenVal.dateFrom}}"style="display: None;">
-                    <input  name="dateTo" id=""  value="{{hiddenVal.dateTo}}" style="display: None;">
-                    <input  name="searchAll" id=""  value="{{hiddenVal.searchAll}}" style="display: None;">
+                    <input  name="Location" id=""  value="{{hiddenVal.Location}}" style="display: None;" hidden>
+                    <input  name="inceident" id=""  value="{{hiddenVal.inceident}}" style="display: None;" hidden>
+                    <input name="Employee" id=""  value="{{hiddenVal.Employee}}" style="display: None;" hidden>
+                    <input  name="dateFrom" id=""  value="{{hiddenVal.dateFrom}}"style="display: None;" hidden>
+                    <input  name="dateTo" id=""  value="{{hiddenVal.dateTo}}" style="display: None;" hidden>
+                    <input  name="searchAll" id=""  value="{{hiddenVal.searchAll}}" style="display: None;" hidden>
                     <button type="submit" class="editButton" name="edit" value="{{incidentReport.id}}">Edit</button>
+                    {% if user.is_superuser %}
                     <button type="submit" class="deleteButton" name="delete" value="{{incidentReport.id}}">Delete</button>
+
+                    {% endif %}
                     </form>
             </td>
-            
+
         </tr>
         {% endfor %}
 
     </table>
-        
+
 </div>
 {% endblock content %}
 
 {% block script %}
-<script>
+<script nonce="{{request.csp_nonce}}" >
 
     document.getElementById("download-button").addEventListener("click", function () {
         download_table_as_csv("data");

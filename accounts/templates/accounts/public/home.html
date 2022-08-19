@@ -10,7 +10,7 @@ Home
 {% endblock content %}
 
 {% block script %}
-<script>
+<script nonce="{{request.csp_nonce}}">
 
 </script>
 {% endblock script %}

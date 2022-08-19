@@ -49,14 +49,14 @@ Dashboard
                     <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
                         Employee Accounts
                     </button>
-                </a>    
+                </a>
             </div>
         {% endif %}
     </div>
 {% endblock content %}
 
 {% block script %}
-<script >
+<script nonce="{{request.csp_nonce}}" >
 
 
 

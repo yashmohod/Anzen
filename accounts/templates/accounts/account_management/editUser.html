@@ -40,7 +40,7 @@ Edit User
             <p>Email</p>
             <input type="email" value="{{ user.email }}"name="email" required>
         </div>
-        
+
         <input type="submit" value="Update" class="registerButton">
 
     </form>
@@ -48,8 +48,8 @@ Edit User
 {% endblock content %}
 
 {% block script %}
-<script>
-    
+<script nonce="{{request.csp_nonce}}">
+
 
     var dob = new Date('{{user.dob}}');
     console.log('{{user.dob}}');
@@ -63,13 +63,13 @@ Edit User
 
 
 
-    
+
     const ele_dob = document.querySelector('input[type="date"]');
-    
+
     const ele_status = document.getElementById('id_status');
 
 
-   
+
     ele_dob.value=dob2;
 
     ele_status.value=status;
