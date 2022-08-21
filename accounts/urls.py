@@ -16,7 +16,10 @@ urlpatterns = [
     path('incidentReportEdit/<int:entryID>/',views.incidentReportEdit,name='incidentReportEdit'),
     path('dashBoard/',views.dashBoard,name='dashBoard'),
     path('viewReports/',views.viewReports,name='viewReports'),
-    path('locations/', views.locations,name='locations' )
+    path('viewReferrals/',views.viewReferrals,name='viewReferrals'),
+    path('referralEdit/<int:referralId>',views.referralEdit,name='referralEdit'),
+    path('viewReport_R/<int:reportID>',views.viewReport_R,name='viewReport_R'),
+    path('locations/', views.locations,name='locations' ),
 
 ]
 

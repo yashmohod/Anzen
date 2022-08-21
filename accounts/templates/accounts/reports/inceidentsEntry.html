@@ -32,8 +32,8 @@ Inceident Entry
                 <tr>
                     <td > {{ inceident }}</td>
                     <td>
-                        <button style="display: none;" class="editButton" value="edit" name="" id="editSubmit">Edit</button>
-                        <p onclick='editInceident({{inceident.id}})' class="editButton">edit</p>
+                        <button  class="hidden" value="edit" name="" id="editSubmit"></button>
+                        <button type="button"  name='{{inceident}}' id ="{{ inceident.id }}"  class="editButton">Edit</button>
                         <button type="submit" class="deleteButton" value="delete" name="1,{{inceident.id}}">Delete</button>
                     </td>
                 </tr>
@@ -49,9 +49,27 @@ Inceident Entry
 
 {% block script %}
 <script nonce="{{request.csp_nonce}}">
-    function editInceident( id){
-        var inceident = String(window.prompt("Enter the updated name ", ""));
-        inceident = '0'+','+id+','+inceident;
+
+    document.addEventListener('click', (e) => {
+
+        let element = e.target;
+        if(element.innerHTML == "Edit"){
+
+            editInceident(`${element.id}`,`${element.name}`);
+        }
+    });
+
+
+
+    function editInceident( id,name){
+        var inceident = String(window.prompt("Enter the updated name", name));
+        if (inceident == 'null') {
+        return; //break out of the function early
+        }
+
+        if (inceident !="null"){
+            inceident = '0'+','+id+','+inceident;
+        }
         const editButton = document.getElementById('editSubmit');
         editButton.setAttribute('name', inceident);
         editButton.click();

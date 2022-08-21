@@ -1,0 +1,49 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Referral Edit
+{% endblock header %}
+
+
+
+{% block content %}
+<div >
+    <form action=""  method="POST"  class="incedentReportEntryMainform">
+        {% csrf_token %}
+        <p>Incident</p>
+        <input type="text" value="{{referral.incidentReport.inceident }}" readonly>                   
+        </select>
+        <p>First Name</p>
+        <input type="text" name="firstName" placeholder="First Name" value={{referral.firstName}} required>
+        <p>Middle Intial</p>
+        <input type="text" name="middleInitial" placeholder="Middle intial" value={{referral.middleInitial}} required>
+        <p>IC ID</p>
+        <input type="number" name="ICID" placeholder="IC ID" value={{referral.ICID}} required>
+        <p>DOB</p>
+        <input type="date" name="DOB" id="DOB"  required>
+        <p>Phone No. </p>
+        <input type="text" name="PhoneNo" placeholder="Phone No." value={{referral.phoneNo}}>
+        <p>Local Address</p>
+        <textarea name="address" cols="20" rows="5">{{referral.address}}</textarea>
+        <button type="submit" name="button" value="edit" class="muleInspectionEntrybutton">Save</button>
+  
+ 
+        
+    </form>
+    
+</div>
+{% endblock content %}
+
+
+
+
+{% block script %}
+<script nonce="{{request.csp_nonce}}">
+    window.onload = function funLoad() {
+        var date = "{{referral.dob|date:'Y-m-d'}}";
+        const dateElem = document.getElementById("DOB");
+        dateElem.value = date;
+        console.log(typeof date);
+    }
+</script>
+{% endblock script %}

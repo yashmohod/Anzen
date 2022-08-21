@@ -29,6 +29,13 @@ Dashboard
                 </button>
             </a>
         </div>
+        <div>
+            <a href="{% url 'viewReferrals' %}">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Referrals
+                </button>
+            </a>
+        </div>
         {% if user.is_superuser %}
             <div>
                 <a href="{% url 'incidentEntry' %}">

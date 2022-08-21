@@ -1,3 +1,5 @@
+from operator import mod
+from pyexpat import model
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -62,13 +64,25 @@ class incidentReport (models.Model):
     arivedTime = models.TimeField(auto_now=False, auto_now_add=False,)
     clearTime = models.TimeField(auto_now=False, auto_now_add=False,)
     location = models.CharField(max_length=150,null=False)
+    locationDetail = models.CharField(max_length=150, null=True)
 
     summary = models.TextField()
     def __str__(self):
         ret = str(self.inceident)+' '+str(self.date)+' '+str(self.location)
         return ret
 
+class referral(models.Model):
+    incidentReport = models.ForeignKey(incidentReport,null=False,on_delete=models.PROTECT)
+    firstName = models.CharField(max_length=150,null=False)
+    middleInitial = models.CharField(max_length=150,null=False)
+    ICID = models.CharField(max_length=150,null=False)
+    dob = models.DateField(auto_now=False, auto_now_add=False,null=False)
+    address = models.TextField()
+    phoneNo = models.CharField(max_length=150,null=False)
 
+    def __str__(self):
+        ret = str(self.inceident)+' '+str(self.firstName)+','+str(self.middleInitial)
+        return ret
 
 
 

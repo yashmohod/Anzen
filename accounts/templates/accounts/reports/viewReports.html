@@ -23,7 +23,7 @@ Records
                     <th>
                         <button type="submit" class="SearchReportButton" name="button" value="all">Show All</button>
                         {% if incidentReports %}
-                        <button type="button" class="SearchReportButton" id="download-button" value="" >Download File</button>
+                        <button type="button" class="SearchReportButton" id="downloadButton" value="" >Download File</button>
                         {% endif %}
                     </th>
                 </tr>
@@ -97,9 +97,7 @@ Records
             <td> {{ incidentReport.clearTime | date:"G:i"  }}</td>
             <td>{{ incidentReport.reportedBy }}</td>
             <td>
-                <textarea rows="4" cols="50" readonly style="resize: none;">
-                    {{ incidentReport.summary }}
-                </textarea>
+                <textarea rows="4" cols="30" readonly style="resize: none;">{{ incidentReport.summary }}</textarea>
             </td>
             <td>
                 <form  action="" method="POST">
@@ -129,7 +127,7 @@ Records
 {% block script %}
 <script nonce="{{request.csp_nonce}}" >
 
-    document.getElementById("download-button").addEventListener("click", function () {
+    document.getElementById("downloadButton").addEventListener("click", function () {
         download_table_as_csv("data");
     });
 
@@ -144,8 +142,11 @@ function download_table_as_csv(table_id, separator = ',') {
         for (var j = 0; j < cols.length-1; j++) {
             // Clean innertext to remove multiple spaces and jumpline (break csv)
             var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
-            if(j==8 && i >0){
-                data= cols[j].getElementsByTagName("textarea")[0].innerHTML;
+            if(j==9 && i >0){
+                if(cols[j].getElementsByTagName("textarea")[0] != null){
+                    data= cols[j].getElementsByTagName("textarea")[0].innerHTML;
+                }
+
             }
 
             // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)

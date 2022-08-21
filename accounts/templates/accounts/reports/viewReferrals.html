@@ -1,0 +1,158 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Referrals
+{% endblock header %}
+
+
+
+{% block content %}
+<div class="accountsDisplay">
+    <H1 class="colourBlue">
+        Referals
+    </H1>
+    <div class="reportSearch">
+        <form action="" method="POST" class="reportSearchForm">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <th>Incident</th>
+                    <th>First Name</th>
+                    <th>IC ID</th>
+                    <th>DOB</th>
+
+                    <th>
+                        <button type="submit" class="SearchReportButton" name="button" value="all">Show All</button>
+                        {% if referrals %}
+                        <button type="button" class="SearchReportButton" id="downloadButton" value="" >Download File</button>
+                        {% endif %}
+                    </th>
+                </tr>
+                <tr>
+                    <td>
+                        <select name="Incident" id="">
+                            <option value="null"></option>
+                            {% for Incident in Incidents %}
+                            <option value="{{Incident}}">{{Incident}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="text" name="firstName" id="" >
+                    </td>
+                    <td>
+                        <input type="text" name="ICID" >
+                    </td>
+                    <td>
+                        <input type="date" placeholder="Date to" name="DOB">
+                    </td>
+                    <td>
+                        <button class="SearchReportButton" type="submit" name="button" value="referralSearch">Search</button>
+                    </td>
+                </tr>
+            </table>
+
+
+        </form>
+
+    </div>
+
+
+    <table id='data' >
+        <tr>
+            <th>Incident</th>
+            <th>First Name</th>
+            <th>Middle Initial </th>
+            <th>IC ID</th>
+            <th>DOB</th>
+            <th>Phone No.</th>
+            <th>Address</th>
+            <th></th>
+        </tr>
+        {% for referral in referrals %}
+        <tr>
+            <td > {{ referral.incidentReport.inceident }}</td>
+            <td > {{ referral.firstName }}</td>
+            <td > {{ referral.middleInitial }}</td>
+            <td > {{ referral.ICID }}</td>
+            <td > {{ referral.dob }}</td>
+            <td > {{ referral.phoneNo}}</td>
+            <td>
+                <textarea cols="20" rows="3" readonly>{{ referral.address }}</textarea>
+            </td>
+
+            <td>
+                <form  action="" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="passButton" name="view" value="{{referral.incidentReport.id}}">View Report</button>
+                    <button type="submit" class="editButton" name="edit" value="{{referral.id}}">Edit</button>
+                    {% if user.is_superuser %}
+                    <button type="submit" class="deleteButton" name="delete" value="{{referral.id}}">Delete</button>
+
+                    {% endif %}
+                    </form>
+            </td>
+
+        </tr>
+        {% endfor %}
+
+    </table>
+
+</div>
+{% endblock content %}
+
+
+
+
+
+
+
+
+{% block script %}
+<script nonce="{{request.csp_nonce}}" >
+
+    document.getElementById("downloadButton").addEventListener("click", function () {
+        download_table_as_csv("data");
+    });
+
+    // Quick and simple export target #table_id into a csv
+function download_table_as_csv(table_id, separator = ',') {
+    // Select rows from table_id
+    var rows = document.querySelectorAll('table#' + table_id + ' tr');
+    // Construct csv
+    var csv = [];
+    for (var i = 0; i < rows.length; i++) {
+        var row = [], cols = rows[i].querySelectorAll('td, th');
+        for (var j = 0; j < cols.length-1; j++) {
+            // Clean innertext to remove multiple spaces and jumpline (break csv)
+            var data = cols[j].innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ');
+            if(j==6 && i >0){
+
+                if(cols[j].getElementsByTagName("textarea")[0] != null){
+                    data= cols[j].getElementsByTagName("textarea")[0].innerHTML;
+                }
+                
+            }
+            console.log(data);
+            // Escape double-quote with double-double-quote (see https://stackoverflow.com/questions/17808511/properly-escape-a-double-quote-in-csv)
+            data = data.replace(/"/g, '""');
+            // Push escaped string
+            row.push('"' + data + '"');
+        }
+        csv.push(row.join(separator));
+    }
+    var csv_string = csv.join('\n');
+    // Download it
+    var filename = 'SaspData.csv';
+    var link = document.createElement('a');
+    link.style.display = 'none';
+    link.setAttribute('target', '_blank');
+    link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv_string));
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+</script>
+{% endblock script %}

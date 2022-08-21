@@ -45,7 +45,19 @@ Daily
                     {% endfor %}
                 </select>
             </div>
-
+            <div>
+                <p>Location Detail</p>
+                <input type="text" name="locationDetail" id="locationDetail" >
+            </div>
+            <p>Referrals</p>
+            <input type="text" name="referralCount" id="referralCount" class="hidden">
+            <div id="referrals">
+              
+            </div>
+            <div class="referralsRow">
+                <button class="muleInspectionEntrybutton" type="button" id="referralsButton">Add Referrals</button>
+                <button type="button" id="referralsDelButton"   >Del</button>
+            </div>
             <div>
                 <p>summary</p>
                 <textarea name="summary" id="" cols="30" rows="5"></textarea>
@@ -59,10 +71,40 @@ Daily
 {% block script %}
 
 <script nonce="{{request.csp_nonce}}" >
+    var refCounter=0;
 
-    document.getElementById("date").addEventListener("click", function () {
-        dateMaxSet();
+document.getElementById("referralsButton").addEventListener("click", function () {
+    document.getElementById("referralsDelButton").className="deleteButton";
+        refCounter = refCounter+1;
+        document.getElementById("referralCount").value=refCounter;
+        var referrals = document.getElementById("referrals");
+        var tag = document.createElement("div");
+        tag.className = "referrals";
+        tag.id="referrals"+refCounter;
+        var reffCellHtml_1 = '<div class="referralsRow">';
+        var reffCellHtml_2 =  '<input type="text" name="firstName'+refCounter+'" placeholder="First Name" required>';
+        var reffCellHtml_3 =  '<input type="text" name="middleInitial'+refCounter+'" placeholder="Middle intial" required>';
+        var reffCellHtml_4 = '<input type="number" name="ICID'+refCounter+'" placeholder="IC ID" required>';
+        var reffCellHtml_5 = '<p>DOB</p>';
+        var reffCellHtml_6 = '<input type="date" name="DOB'+refCounter+'" placeholder="DOB" required>';
+        var reffCellHtml_7 = '<p>Local Address</p>';
+        var reffCellHtml_8 = '<textarea name="address'+refCounter+'" cols="20" rows="5"></textarea>';
+        var reffCellHtml_9 = '<input type="text" name="PhoneNo'+refCounter+'" placeholder="Phone No.">';
+        var reffCellHtml_10 = '</div>';
+        var reffCellHtml_all = reffCellHtml_1+reffCellHtml_2+reffCellHtml_3+reffCellHtml_4+reffCellHtml_5+reffCellHtml_6+reffCellHtml_7+reffCellHtml_8+reffCellHtml_9+reffCellHtml_10;
+        var delButtonId = 'refdelbut_'+refCounter;
+        tag.innerHTML='<div class="divRow"><p>'+'Person '+refCounter+'</p>'+''+'</div>'+reffCellHtml_all;
+        referrals.appendChild(tag);
+    
     });
+
+    document.getElementById("referralsDelButton").addEventListener("click", function() {
+        var refTable = document.getElementById("referrals"+refCounter);
+        refTable.remove();
+        refCounter = refCounter-1;
+    });
+
+
     function dateMaxSet(){
         // get todays date
         var today = new Date();
@@ -75,6 +117,8 @@ Daily
     }
 
     window.addEventListener('load', (event) => {
+        document.getElementById("referralsDelButton").className="hidden";
+        dateMaxSet();
 
         document.getElementById("receivedTime").addEventListener('input', function () {
             check_time(document.getElementById("receivedTime").value,"receivedTime");

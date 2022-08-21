@@ -1,4 +1,7 @@
+
+import re
 from time import strftime
+from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
@@ -176,6 +179,8 @@ def incidentReportEntry(request):
     inceidents=models.inceident.objects.all()
     locations = models.location.objects.all()
     if request.method == 'POST':
+        print(request.POST)
+        #inceident record
         newinceidentReportEntry = models.incidentReport(reportedBy = request.user,
         inceident =request.POST.get('inceident'),
         date =request.POST.get('date'),
@@ -184,10 +189,29 @@ def incidentReportEntry(request):
         arivedTime =request.POST.get('arivedTime'),
         clearTime =request.POST.get('clearTime'),
         location = request.POST.get('location'),
-
+        locationDetail = request.POST.get('locationDetail'),
         summary =request.POST.get('summary')
         )
         newinceidentReportEntry.save()
+        #referal record
+
+        if((request.POST.get("referralCount")!='' ) and (request.POST.get("referralCount")!= NULL) ):
+            referralCount = int(request.POST.get("referralCount"))
+
+            while(referralCount!=0):
+                newReferral = models.referral(incidentReport=newinceidentReportEntry,
+                firstName = request.POST.get('firstName'+str(referralCount)),
+                middleInitial = request.POST.get('middleInitial'+str(referralCount)),
+                ICID = request.POST.get('ICID'+str(referralCount)),
+                dob = request.POST.get('DOB'+str(referralCount)),
+                address = request.POST.get('address'+str(referralCount)),
+                phoneNo = request.POST.get('PhoneNo'+str(referralCount)),
+                )
+                newReferral.save()
+                referralCount = referralCount-1
+
+
+
         return redirect('dashBoard')
     return render(request,'accounts/reports/inceidentReportEntry.html',{'inceidents':inceidents,'locations':locations})
 
@@ -213,7 +237,7 @@ def incidentReportEdit(request, entryID):
         incidentReport.arivedTime = request.POST.get("arivedTime")
         incidentReport.clearTime = request.POST.get("clearTime")
         incidentReport.location = request.POST.get("location")
-        i
+        incidentReport.locationDetail = request.POST.get('locationDetail')
         incidentReport.summary = request.POST.get("summary")
         incidentReport.save()
         return redirect("viewReports")
@@ -255,6 +279,102 @@ def viewReports(request):
     return render(request,'accounts/reports/viewReports.html',{'locations':locationsAll,'employees':employees,'inceidents':inceidents,'incidentReports':incidentReports,"hiddenVal":hiddenVal})
 
 
+
+def viewReferrals(request):
+    referrals = []
+    Incidents= models.inceident.objects.all()
+    if(request.POST.get('button') == 'all'):
+        referrals = models.referral.objects.all()
+    elif(request.POST.get('button') == 'referralSearch'):
+        #print(request.POST)
+        referrals=referralSearch(request)
+    else:
+        if(request.POST.get('delete') != None):
+            referral = models.referral.objects.get(id=request.POST.get('delete'))
+            referral.delete()
+        if  request.POST.get('edit') != None:
+            id=request.POST.get('edit')
+            redirect_url = reverse('referralEdit', args=[id])
+            return redirect(redirect_url)
+        if(request.POST.get('view') != None):
+            id=request.POST.get('view')
+            redirect_url = reverse('viewReport_R', args=[id])
+            return redirect(redirect_url)
+
+    return render(request,'accounts/reports/viewReferrals.html',{'referrals':referrals,'Incidents':Incidents})
+
+def  viewReport_R (request,reportID):
+    locationsAll = models.location.objects.all()
+    employees = models.User.objects.filter(status='Active')
+    inceidents = models.inceident.objects.all()
+    incidentReports=[models.incidentReport.objects.get(id=reportID)]
+    hiddenVal=[]
+    searchall=0
+    if request.POST.get('button') == 'all':
+        searchall =1
+
+    if request.method == 'POST':
+        hiddenVal = {'Location':request.POST.get('Location'),'inceident':request.POST.get('inceident'),'Employee':request.POST.get('Employee'),'dateFrom':request.POST.get('dateFrom'),'dateTo' :request.POST.get('dateTo'),'searchAll' :searchall}
+        print(request.POST)
+        if request.POST.get('button') == 'reportSearch':
+            incidentReports = viewincidentReports(request)
+
+        elif request.POST.get('button') == 'all':
+            incidentReports = models.incidentReport.objects.all()
+        else:
+            if request.POST.get('delete') != None:
+                incidentReport = models.incidentReport.objects.get(id=request.POST.get('delete'))
+                incidentReport.delete()
+                incidentReports = viewincidentReportsFil(request.POST.get('Location'),request.POST.get('inceident'),request.POST.get('Employee'),request.POST.get('dateFrom'),request.POST.get('dateTo'),request.POST.get('searchAll'))
+            if  request.POST.get('edit') != None:
+                id=request.POST.get('edit')
+                redirect_url = reverse('incidentReportEdit', args=[id])
+                return redirect(redirect_url)
+
+    return render(request,'accounts/reports/viewReports.html',{'locations':locationsAll,'employees':employees,'inceidents':inceidents,'incidentReports':incidentReports,"hiddenVal":hiddenVal})
+
+
+
+def referralSearch(request):
+    referrals = models.referral.objects.all()
+    count = 4
+    if request.POST.get("Incident") != 'null':
+        count = count -1
+        referrals = referrals.filter(incidentReport__inceident=request.POST.get("Incident"))
+    if request.POST.get("firstName")!= '':
+        count = count -1
+        referrals = referrals.filter(firstName=request.POST.get("firstName"))
+    if request.POST.get("ICID")!= '':
+        count = count -1
+        referrals = referrals.filter(ICID =request.POST.get("ICID") )
+    if request.POST.get("DOB")!= '':
+        count = count -1
+        print(request.POST.get("DOB"))
+        referrals = referrals.filter(dob = request.POST.get("DOB"))
+    if count == 4:
+        referrals =[]
+    return referrals
+
+def referralEdit(request,referralId):
+    referral = models.referral.objects.get(id=referralId)
+    inc= models.inceident.objects.all()
+    Incidents =[]
+    for i in inc:
+        Incidents.append(str(i))
+
+    if(request.POST.get("button") =="edit"):
+        referral.firstName = request.POST.get("firstName")
+        referral.middleInitial =  request.POST.get("middleInitial")
+        referral.ICID =  request.POST.get("ICID")
+        referral.dob =  request.POST.get("DOB")
+        referral.address =  request.POST.get("address")
+        referral.phoneNo =  request.POST.get("PhoneNo")
+        referral.save()
+        return redirect("viewReferrals")
+
+    return render(request,"accounts/reports/referralsEdit.html",{'referral':referral,'Incidents':Incidents})
+
+
 def viewincidentReports(request):
     incidentReports = models.incidentReport.objects.all()
     count =5
@@ -276,8 +396,7 @@ def viewincidentReports(request):
     elif request.POST.get('dateFrom') !='':
         count = count-1
         dateFrom = strftime(request.POST.get('dateFrom'))
-        print(dateFrom)
-        print(type(dateFrom))
+
         incidentReports = incidentReports.filter(date__gte=dateFrom)
     elif request.POST.get('dateTo')!='':
         count = count-1
