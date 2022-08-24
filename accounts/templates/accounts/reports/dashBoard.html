@@ -6,6 +6,25 @@ Dashboard
 
 
 {% block content %}
+
+
+<div id="popup1" class="overlay">
+	<div class="popup">
+		<h2>Pop Up</h2>
+		<a class="close" id="popUpClose" href="#">&times;</a>
+		<div class="content">
+            {% for message in messages  %}
+                <p>{{message}}</p>
+            {% endfor %}
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
     <div class="dashBoardGreetings">
         <div class="waviy">
             <span style="--i:1">H</span>
@@ -13,7 +32,19 @@ Dashboard
             </div>
         <p class="dashBoardGreetingsText" style="margin-left: 10px;">{{user.firstName}}</p>
     </div>
+    
     <div class="dashboardNavigation">
+        <div>
+            <form action="" method="post">
+                {% csrf_token %}
+
+                {% if  user in clockedIN  %}
+                    <button  type="submit" class="clockOUTbutton" name="ClockButton" value="clockOut">Clock Out</button>
+                {% else %}
+                    <button  type="submit" class="clockINbutton" name="ClockButton" value="clockIn">Clock In</button>
+                {% endif %}
+            </form>
+        </div>
 
         <div>
             <a href="{% url 'incidentReportEntry' %}">
@@ -33,6 +64,13 @@ Dashboard
             <a href="{% url 'viewReferrals' %}">
                 <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
                     Referrals
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="{% url 'timeCard' %}">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Time Card
                 </button>
             </a>
         </div>
@@ -65,6 +103,16 @@ Dashboard
 {% block script %}
 <script nonce="{{request.csp_nonce}}" >
 
+
+    {% if messages  %}
+    var popUp = document.getElementById("popup1")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+        });
+    {% endif %} 
 
 
 </script>

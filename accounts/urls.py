@@ -19,6 +19,7 @@ urlpatterns = [
     path('viewReferrals/',views.viewReferrals,name='viewReferrals'),
     path('referralEdit/<int:referralId>',views.referralEdit,name='referralEdit'),
     path('viewReport_R/<int:reportID>',views.viewReport_R,name='viewReport_R'),
+    path('timeCard', views.timeCard, name='timeCard'),
     path('locations/', views.locations,name='locations' ),
 
 ]

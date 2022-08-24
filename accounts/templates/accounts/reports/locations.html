@@ -6,6 +6,22 @@ Location Entry
 
 
 {% block content %}
+
+<div id="popup1" class="overlay">
+	<div class="popup">
+		<h2>Pop Up</h2>
+		<a class="close" id="popUpClose" href="#">&times;</a>
+		<div class="content">
+            {% for message in messages  %}
+                <p>{{message}}</p>
+            {% endfor %}
+		</div>
+	</div>
+</div>
+
+
+
+
 <div class="inceidentFormsBody">
     <div class="inceidentAddDisplay">
         <H1 class="colourBlue">
@@ -15,7 +31,7 @@ Location Entry
             <form class="inceidentsAddForm" action="" method="POST">
                 {% csrf_token %}
                 <input type="text" name="newlocation" required>
-                <button type="submit" class="newInceidentButton">Add Location</button>
+                <button type="submit" name ="addLoco" class="newInceidentButton">Add Location</button>
 
             </form>
         </div>
@@ -34,7 +50,7 @@ Location Entry
                     <td>
                         <button  class="hidden" value="edit" name="" id="editSubmit">Edit</button>
                         <button type="button"  name='{{location}}' id ="{{ location.id }}"  class="editButton">Edit</button>
-                        <button type="submit" class="deleteButton" value="delete" name="1,{{location.id}}">Delete</button>
+                        <button type="submit" class="deleteButton" value="delete" id="deletebut" name="1,{{location.id}}">Delete</button>
                     </td>
                 </tr>
                 {% endfor %}
@@ -54,8 +70,9 @@ Location Entry
     document.addEventListener('click', (e) => {
         let element = e.target;
         if(element.tagName == "BUTTON"){
-
-            editInceident(`${element.id}`,`${element.name}`);
+            if((`${element.name}` != "addLoco")&&(`${element.id}` != "deletebut")){
+                editInceident(`${element.id}`,`${element.name}`);
+            }
         }
     });
 
@@ -79,6 +96,16 @@ Location Entry
         editButton.click();
     }
 
+
+    {% if messages  %}
+    var popUp = document.getElementById("popup1")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+        });
+    {% endif %} 
 
 </script>
 {% endblock script %}

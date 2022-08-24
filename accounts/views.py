@@ -1,4 +1,5 @@
 
+from datetime import datetime
 import re
 from time import strftime
 from urllib import request
@@ -8,7 +9,9 @@ from django.urls import reverse
 from . import forms,models
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
+from django.http import HttpResponseRedirect
+from django.contrib import messages
 
 
 # Create your views here.
@@ -168,11 +171,43 @@ def incidentEntry(request):
     return render(request,'accounts/reports/inceidentsEntry.html',{'inceidents':inceidents})
 
 
-
 @login_required(login_url='login')
 def dashBoard(request):
+    CoI = models.clockedIn.objects.all()
+    clockedIN =[]
+    for c in CoI:
+        clockedIN.append(c.who)
+    
+    
 
-    return render(request,'accounts/reports/dashBoard.html')
+    if request.POST.get("ClockButton") == "clockIn":
+        CoI = models.clockedIn.objects.all()
+        clockedIN =[]
+        for c in CoI:
+            clockedIN.append(c.who)
+        if not( request.user in clockedIN): 
+            models.clockedIn.objects.create(who=request.user,start= datetime.now())
+            CoI = models.clockedIn.objects.all()
+            return HttpResponseRedirect(reverse("dashBoard"))
+
+    if request.POST.get("ClockButton") == "clockOut":
+        clockInRec = models.clockedIn.objects.get(who = request.user)
+        endDT = timezone.now()
+        # print(type(clockInRec.start))
+        # print(endDT)
+        pop = endDT-clockInRec.start
+        print(round(pop.seconds/3600))
+        print(round(pop.seconds/60))
+        hr = str(round(pop.seconds/3600)).rjust(2, '0')
+        min = str(round(pop.seconds/60)).rjust(2, '0')
+        dur = hr+":"+min
+        models.timeCard.objects.create(who =request.user, start =clockInRec.start,end = endDT,duration = dur  )
+        clockInRec.delete()
+        CoI = models.clockedIn.objects.all()
+        return HttpResponseRedirect(reverse("dashBoard"))
+
+
+    return render(request,'accounts/reports/dashBoard.html',{'clockedIN':clockedIN})
 
 @login_required(login_url='login')
 def incidentReportEntry(request):
@@ -195,7 +230,7 @@ def incidentReportEntry(request):
         newinceidentReportEntry.save()
         #referal record
 
-        if((request.POST.get("referralCount")!='' ) and (request.POST.get("referralCount")!= NULL) ):
+        if((request.POST.get("referralCount")!='' ) and (request.POST.get("referralCount")!= None ) ):
             referralCount = int(request.POST.get("referralCount"))
 
             while(referralCount!=0):
@@ -209,10 +244,9 @@ def incidentReportEntry(request):
                 )
                 newReferral.save()
                 referralCount = referralCount-1
+        messages.success(request, 'Report Submited Successfully !!!')
+        return HttpResponseRedirect(reverse("dashBoard"))
 
-
-
-        return redirect('dashBoard')
     return render(request,'accounts/reports/inceidentReportEntry.html',{'inceidents':inceidents,'locations':locations})
 
 
@@ -477,6 +511,134 @@ def locations(request):
                 inceToedit.save()
             elif buttonFunc == '1':
                 inceToDel = models.location.objects.get(id=inceidentId)
+                messages.success(request, "Location:"+'"'+inceToDel.locationName+'"'+" deleted")
                 inceToDel.delete()
+                return HttpResponseRedirect(reverse("locations"))
 
     return render(request,'accounts/reports/locations.html',{'locations':locationsAll})
+
+
+
+def timeCard(request):
+    employees = models.User.objects.all()
+    searchTCs=models.timeCard.objects.all().filter(approval="Pending")
+    recentTCs = reversed( models.timeCard.objects.all().filter(who =request.user,approval="Pending"))
+    allTcs = reversed(models.timeCard.objects.all().filter(who =request.user).exclude(approval="Pending"))
+
+    if request.POST.get("button")== "deleteTC":
+        tc = models.timeCard.objects.get(id= request.POST.get("tcID"))
+        tc.delete()
+        messages.success(request, 'Time Card deleted successfully!')
+        return HttpResponseRedirect(reverse("timeCard"))
+
+
+    if request.POST.get("button") == "timeCardSubmision" :
+        st = datetime.strptime(request.POST.get("start").replace("T", " "),"%Y-%m-%d %H:%M")
+        en = datetime.strptime(request.POST.get("end").replace("T", " "),"%Y-%m-%d %H:%M")
+        if st > en :
+            messages.success(request, 'Input Error!!!')
+            messages.success(request, 'Start Time can not be after End Time!')
+            return HttpResponseRedirect(reverse("timeCard"))
+        nt = request.POST.get("note")
+        pop = en - st
+        hr = str(pop.seconds // 3600).rjust(2, '0')
+        min = str((pop.seconds // 60) - (int(hr) * 60)).rjust(2, '0')
+        dur = hr+":"+min
+
+        for tc in models.timeCard.objects.all().filter(who =request.user):
+            if (st > tc.start and st < tc.end) or (en > tc.start and en < tc.end):
+                messages.success(request, 'There is a time over Lap!!')
+                messages.success(request, 'Check the previous time cards.')
+                return HttpResponseRedirect(reverse("timeCard"))
+        
+        ntc = models.timeCard.objects.create(who = request.user, start = st,duration=dur, end = en,note = nt )
+        ntc.save()
+        messages.success(request, 'Time Card Submited!!')
+        return HttpResponseRedirect(reverse("timeCard"))
+    
+    if request.POST.get("button") == "timeCardEditSubmision":
+        st = datetime.strptime(request.POST.get("start").replace("T", " "),"%Y-%m-%d %H:%M")
+        en = datetime.strptime(request.POST.get("end").replace("T", " "),"%Y-%m-%d %H:%M")
+        if st > en :
+            messages.success(request, 'Input Error!!!')
+            messages.success(request, 'Start Time can not be after End Time!')
+            return HttpResponseRedirect(reverse("timeCard"))
+        nt = request.POST.get("note")
+        tcid = request.POST.get("TCIDedit")
+        pop = en - st
+        hr = str(pop.seconds // 3600).rjust(2, '0')
+        min = str((pop.seconds // 60) - (int(hr) * 60)).rjust(2, '0')
+        dur = hr+":"+min
+
+        for tc in models.timeCard.objects.all().filter(who =request.user):
+            if (st > tc.start and st < tc.end) or (en > tc.start and en < tc.end):
+                messages.success(request, 'There is a time over Lap!!')
+                messages.success(request, 'Check the previous time cards.')
+                return HttpResponseRedirect(reverse("timeCard"))
+        
+        ntc = models.timeCard.objects.get(id = tcid)
+        ntc.start= st
+        ntc.end= en
+        ntc.duration= dur
+        ntc.note= nt
+        ntc.save()
+        messages.success(request, 'Time Card Edited!!')
+        return HttpResponseRedirect(reverse("timeCard"))
+
+
+    if request.POST.get("button")== "ClearTC":
+        tcid = request.POST.get("tcID")
+        Rtc = models.timeCard.objects.get(id = tcid)
+        Rtc.delete()
+        messages.success(request, 'Time Card Cleard!!')
+        return HttpResponseRedirect(reverse("timeCard"))
+
+    if request.POST.get("button")== "ApproveTC":
+        tcid = request.POST.get("tcID")
+        Rtc = models.timeCard.objects.get(id = tcid)
+        Rtc.approval = "Approved"
+        Rtc.save()
+        messages.success(request, 'Time Card Approved!!')
+        return HttpResponseRedirect(reverse("timeCard"))
+
+    if request.POST.get("button")== "searchTC":
+
+        empID = request.POST.get("Employee")
+
+        dateFrom = request.POST.get("dateFrom")
+        dateTo = request.POST.get("dateTo")
+        status = request.POST.get("status")
+        print(request.POST)
+        searchTCs=models.timeCard.objects.all()
+        if empID != "null":
+            searchTCs = searchTCs.filter(who__id =empID )
+       
+        if status != "null":
+            searchTCs = searchTCs.filter(approval =status )
+        
+        temp =[]
+        if dateFrom !='' and dateTo !='':
+            print("here")
+            dateFrom = datetime.strptime(dateFrom,"%Y-%m-%d")
+            dateTo = datetime.strptime(dateTo,"%Y-%m-%d")
+            for searchTC in searchTCs:
+                if  (dateFrom >= searchTC.start and dateFrom <= searchTC.end) or (dateTo >= searchTC.start and dateTo <= searchTC.end) :
+                    temp.append(searchTC)
+            searchTCs=temp
+        elif dateFrom !='' :
+            print("here2")
+            dateFrom = datetime.strptime(dateFrom,"%Y-%m-%d")
+            for searchTC in searchTCs:
+                if  (dateFrom >= searchTC.start and dateFrom <= searchTC.end) or (dateFrom < searchTC.start) :
+                    temp.append(searchTC)
+            searchTCs=temp
+        elif dateTo !='':
+            print("here3")
+            dateTo = datetime.strptime(dateTo,"%Y-%m-%d")
+            for searchTC in searchTCs:
+                if  (dateTo <= searchTC.end) or (dateTo >= searchTC.start and dateTo <= searchTC.end) :
+                    temp.append(searchTC)
+            searchTCs=temp
+        return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs})
+
+    return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs})

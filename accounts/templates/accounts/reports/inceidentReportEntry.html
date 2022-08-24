@@ -163,5 +163,20 @@ document.getElementById("referralsButton").addEventListener("click", function ()
         }
         }
     }
+
+
+    {% if messages  %}
+    var popUp = document.getElementById("popup1")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+        });
+    {% endif %} 
+
+
+
+
 </script>
 {% endblock script %}

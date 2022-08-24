@@ -1,0 +1,318 @@
+{% extends 'accounts/index.html' %}
+
+{% block header %}
+Time Card
+{% endblock header %}
+
+
+{% block content %}
+<div id="popup1" class="overlay">
+	<div class="popup">
+		<h2>Pop Up</h2>
+		<a class="close" id="popUpClose" href="#">&times;</a>
+		<div class="content">
+            {% for message in messages  %}
+                <p>{{message}}</p>
+            {% endfor %}
+		</div>
+	</div>
+</div>
+
+
+<div id="popup2" class="overlay">
+	<div class="popup2">
+        <a class="close" id="popUpClose2" href="#">&times;</a>
+		<div class="content">
+            <form action="" method="post">
+                {% csrf_token %}
+                <p>Start</p>
+                <input type="datetime-local" name="start" id="" required>
+                <p>End</p>
+                <input type="datetime-local" name="end" id="" required>
+                <p>Note</p>
+                <textarea name="note" id="" cols="30" rows="2"></textarea>
+                <button class="TCsubmitButton" name="button" value="timeCardSubmision" type="submit">Submit</button>
+            </form>
+		</div>
+	</div>
+</div>
+
+<div id="popup3" class="overlay">
+	<div class="popup3">
+        <a class="close" id="popUpClose3" href="#">&times;</a>
+		<div class="content">
+            <form action="" method="post">
+                {% csrf_token %}
+                <p>Start</p>
+                <input type="datetime-local" name="start" id="tcEditStart" required>
+                <p>End</p>
+                <input type="datetime-local" name="end" id="tcEditEnd" required>
+                <p>Note</p>
+                <textarea name="note"  cols="30" rows="2" id="tcEditNote"></textarea>
+                <input type="text" class="hidden" name="TCIDedit" id="TCIDedit">
+                <button class="TCsubmitButton" name="button" value="timeCardEditSubmision" type="submit">Submit</button>
+            </form>
+		</div>
+	</div>
+</div>
+
+
+
+
+<div class="TimeCardWraper">
+    <div class="ownTimeCards">
+        <H2> Your Recent Time Cards</H2>
+        <table>
+                <tr>
+                    <th>Submission Date</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th><button type="button" id="addTimeCard" class="SearchReportButton"> Add Time card</button></th>
+                </tr>
+                {% for recentTC  in recentTCs  %}
+                    <tr>
+                        
+                        <td>{{recentTC.submitedDate |date:"M d, Y"}}</td>
+                        <td id="start{{recentTC.id}}">{{recentTC.start | date:"m/d/Y G:i" }}</td>
+                        <td id="end{{recentTC.id}}">{{recentTC.end | date:"m/d/Y G:i" }}</td>
+                        <td>{{recentTC.duration }}</td>
+                        <td> Pending</td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="text" name="tcID" value="{{recentTC.id}}" hidden>
+                                <textarea class="hidden" id="note{{recentTC.id}}" cols="30" rows="10">{{recentTC.note}}</textarea>
+                                <button type="button" name="tcEdit" id="{{recentTC.id}}"  class="editButton">Edit</button>
+                                <button type="submit" class="deleteButton" name="button" value="deleteTC">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                
+        </table>
+    </div>
+
+    <div class="timeCardRequest">
+        {% if user.is_superuser %}
+        <H2> All Time Cards</H2>
+        <table>
+            <tr>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <p>Employee</p>
+                        <select name="Employee" id="">
+                            <option value="null"></option>
+                            {% for employee in employees %}
+                            <option value="{{employee.id}}">{{employee}}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <p>Date From</p>
+                        <input type="date" placeholder="Date from" name="dateFrom">
+                    </td>
+                    <td>
+                        <p>Date To</p>
+                        <input type="date" placeholder="Date to" name="dateTo">
+                    </td>
+                    <td>
+                        <p>Status</p>
+                        <select name="status" id="">
+                            <option value="null"></option>
+                            <option value="Approved">Approved</option>
+                            <option value="Pending">Pending</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit" name="button" value="searchTC" class="SearchReportButton">Search Time Card</button>
+                    </td>
+                    <td></td>
+
+                </form>
+            </tr>
+            <tr>
+                <td>Employee</td>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Duration</th>
+                <th>Note</th>
+                <th>Status</th>
+                <th><button Type="button" class="SearchReportButton"> Add Time card</button></th>
+            </tr>
+            {% for searchTC  in searchTCs  %}
+                <tr>
+                    <td>{{searchTC.who }}</td>
+                    <td>{{searchTC.start |date:"M d, Y"}}</td>
+                    <td id="Astart{{searchTC.id}}">{{searchTC.start | date:"m/d/Y G:i"}}</td>
+                    <td id="Aend{{searchTC.id}}">{{searchTC.end | date:"m/d/Y G:i"}}</td>
+                    <td>{{searchTC.duration }}</td>
+                    <td><textarea name="" id="Anote{{searchTC.id}}" cols="20" rows="2" readonly>{{searchTC.note}}</textarea></td>
+                    <td>{{searchTC.approval }}</td>
+                    <td>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="tcID" value="{{searchTC.id}}" hidden>
+                            <button type="button" class="passButton" name="aTCedit" id="{{searchTC.id}}">Edit</button>
+                            <button type="submit" class="deleteButton" name="button" value="ClearTC">Clear</button>
+                            <button type="submit" class="editButton" name="button" value="ApproveTC">Approve</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+                
+               
+        </table>
+        {% else %}  
+        <H2> All Time Cards</H2>
+        <table>
+                <tr>
+                    <th>Submission Date</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Duration</th>
+                    <th>Note</th>
+                    <th>Status</th>
+
+                </tr>
+                {% for allTc  in allTcs  %}
+                    <tr>
+                        <td>{{allTc.start |date:"M d, Y"}}</td>
+                        <td>{{allTc.start | date:"m/d/Y G:i"}}</td>
+                        <td>{{allTc.end | date:"m/d/Y G:i"}}</td>
+                        <td>{{allTc.duration  }}</td>
+                        <td><textarea name="" id="" cols="20" rows="3" readonly>{{allTc.note}}</textarea></td>
+                        <td>{{allTc.approval  }}</td>
+                {% endfor %}
+                
+               
+        </table>
+
+        {% endif %}
+    </div>
+</div>
+
+
+
+
+
+
+{% endblock content %}
+
+
+{% block script %}
+<script  nonce="{{request.csp_nonce}}">
+
+    {% if messages  %}
+    var popUp = document.getElementById("popup1")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+        });
+    {% endif %} 
+
+
+    function delay(time) {
+  return new Promise(resolve => setTimeout(resolve, time));
+}
+
+    document.getElementById("addTimeCard").addEventListener("click",function () {
+        var popUp = document.getElementById("popup2")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose2").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+    
+        });
+    })
+
+
+
+    document.addEventListener('click', (e) => {
+        let element = e.target;
+        if(element.tagName == "BUTTON"){
+
+            // console.log(`${element.id}`,`${element.name}`);
+            if (`${element.name}`=="tcEdit"){
+                console.log("here")
+                var TCID = `${element.id}`;
+                var popUp = document.getElementById("popup3");
+                popUp.style.visibility = "visible";
+                popUp.style.opacity = "1";
+                document.getElementById("popUpClose3").addEventListener('click', function () {
+                    popUp.style.visibility = "hidden";
+                    popUp.style.opacity = "0";
+                    });
+                var tcStart = document.getElementById("tcEditStart");
+                var tcEnd = document.getElementById("tcEditEnd");
+                var tcNote = document.getElementById("tcEditNote");
+                var idHolder = document.getElementById("TCIDedit");
+
+                var dataStart = document.getElementById("start"+TCID).innerHTML;
+                var dataEnd = document.getElementById("end"+TCID).innerHTML;
+                var dataNote = document.getElementById("note"+TCID).innerHTML;
+
+                tcStart.value = srtTOdate(dataStart);
+                tcEnd.value = srtTOdate(dataEnd);
+                tcNote.innerHTML = dataNote;
+                idHolder.value = TCID;
+
+            }
+            if (`${element.name}`=="aTCedit"){
+                console.log("here2")
+                var TCID = `${element.id}`;
+                console.log("TCID");
+                var popUp = document.getElementById("popup3");
+                popUp.style.visibility = "visible";
+                popUp.style.opacity = "1";
+                document.getElementById("popUpClose3").addEventListener('click', function () {
+                    popUp.style.visibility = "hidden";
+                    popUp.style.opacity = "0";
+                    });
+                var tcStart = document.getElementById("tcEditStart");
+                var tcEnd = document.getElementById("tcEditEnd");
+                var tcNote = document.getElementById("tcEditNote");
+                var idHolder = document.getElementById("TCIDedit");
+
+                var dataStart = document.getElementById("Astart"+TCID).innerHTML;
+                var dataEnd = document.getElementById("Aend"+TCID).innerHTML;
+                var dataNote = document.getElementById("Anote"+TCID).innerHTML;
+
+                tcStart.value = srtTOdate(dataStart);
+                tcEnd.value = srtTOdate(dataEnd);
+                tcNote.innerHTML = dataNote;
+                idHolder.value = TCID;
+
+            }
+        }
+    });
+
+function srtTOdate(strDate){
+    var [dateValues, timeValues] = strDate.split(' ');
+    console.log(timeValues);
+    var [hr, min] = timeValues.split(':');
+    hr = n(parseInt(hr));
+    min = n(parseInt(min));
+    console.log(hr)
+    console.log(min)
+    timeValues = hr+":"+min;
+    var [month, day, year] = dateValues.split('/');
+    var dat= year+"-"+month+"-"+day;
+    console.log(dat+"T"+timeValues);
+    return dat+"T"+timeValues;
+}
+
+function n(n){
+    return n > 9 ? "" + n: "0" + n;
+}
+
+</script>
+{% endblock script %}
