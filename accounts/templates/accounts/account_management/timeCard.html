@@ -60,9 +60,9 @@ Time Card
 
 
 <div class="TimeCardWraper">
-    <div class="ownTimeCards">
+    <div class="ownTimeCardsLaptop">
         <H2> Your Recent Time Cards</H2>
-        <table>
+        <table >
                 <tr>
                     <th>Submission Date</th>
                     <th>Start</th>
@@ -93,105 +93,232 @@ Time Card
                 
         </table>
     </div>
-
-    <div class="timeCardRequest">
-        {% if user.is_superuser %}
-        <H2> All Time Cards</H2>
+    <div class="ownTimeCards">
+        <H2> Your Recent Time Cards</H2>
         <table>
             <tr>
-                <form action="" method="POST">
-                    {% csrf_token %}
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <p>Employee</p>
-                        <select name="Employee" id="">
-                            <option value="null"></option>
-                            {% for employee in employees %}
-                            <option value="{{employee.id}}">{{employee}}</option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                    <td>
-                        <p>Date From</p>
-                        <input type="date" placeholder="Date from" name="dateFrom">
-                    </td>
-                    <td>
-                        <p>Date To</p>
-                        <input type="date" placeholder="Date to" name="dateTo">
-                    </td>
-                    <td>
-                        <p>Status</p>
-                        <select name="status" id="">
-                            <option value="null"></option>
-                            <option value="Approved">Approved</option>
-                            <option value="Pending">Pending</option>
-                        </select>
-                    </td>
-                    <td>
-                        <button type="submit" name="button" value="searchTC" class="SearchReportButton">Search Time Card</button>
-                    </td>
-                    <td></td>
 
-                </form>
+                <th><button type="button" id="maddTimeCard" class="SearchReportButton"> Add Time card</button></th>
             </tr>
-            <tr>
-                <td>Employee</td>
-                <th>Date</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Duration</th>
-                <th>Note</th>
-                <th>Status</th>
-                <th><button Type="button" class="SearchReportButton"> Add Time card</button></th>
-            </tr>
-            {% for searchTC  in searchTCs  %}
+            {% for MrecentTC  in MrecentTCs  %}
                 <tr>
-                    <td>{{searchTC.who }}</td>
-                    <td>{{searchTC.start |date:"M d, Y"}}</td>
-                    <td id="Astart{{searchTC.id}}">{{searchTC.start | date:"m/d/Y G:i"}}</td>
-                    <td id="Aend{{searchTC.id}}">{{searchTC.end | date:"m/d/Y G:i"}}</td>
-                    <td>{{searchTC.duration }}</td>
-                    <td><textarea name="" id="Anote{{searchTC.id}}" cols="20" rows="2" readonly>{{searchTC.note}}</textarea></td>
-                    <td>{{searchTC.approval }}</td>
                     <td>
+                        <p>Submission Date: {{MrecentTC.submitedDate |date:"M d, Y"}}</p>
+                        Start: <p id="start{{recentTC.id}}">{{MrecentTC.start | date:"m/d/Y G:i" }}</p>
+                        End: <p id="end{{recentTC.id}}">{{MrecentTC.end | date:"m/d/Y G:i" }}</p>
+                        <p>Duration: {{MrecentTC.duration }}</p>
+                        <p>Status: Pending</p>
                         <form method="POST">
                             {% csrf_token %}
-                            <input type="text" name="tcID" value="{{searchTC.id}}" hidden>
-                            <button type="button" class="passButton" name="aTCedit" id="{{searchTC.id}}">Edit</button>
-                            <button type="submit" class="deleteButton" name="button" value="ClearTC">Clear</button>
-                            <button type="submit" class="editButton" name="button" value="ApproveTC">Approve</button>
+                            <input type="text" name="tcID" value="{{MrecentTC.id}}" hidden>
+                            <textarea class="hidden" id="note{{MrecentTC.id}}" cols="30" rows="10">{{MrecentTC.note}}</textarea>
+                            <button type="button" name="tcEdit" id="{{MrecentTC.id}}"  class="editButton">Edit</button>
+                            <button type="submit" class="deleteButton" name="button" value="deleteTC">Delete</button>
                         </form>
                     </td>
                 </tr>
             {% endfor %}
-                
+            
+    </table>
+    </div>
+    
+
+    <div class="timeCardRequest">
+        {% if user.is_superuser %}
+        <H2> All Time Cards</H2>
+        <div class="laptop">
+            <table >
+                <tr>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <td></td>
+                        <td></td>
+                            <td>
+                                <p>Employee</p>
+                                <select name="Employee" id="">
+                                    <option value="null"></option>
+                                    {% for employee in employees %}
+                                    <option value="{{employee.id}}">{{employee}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>   
+                            <td>
+                                <p>Date From</p>
+                                <input type="date" placeholder="Date from" name="dateFrom">
+                            </td>
+                            <td>
+                                <p>Date To</p>
+                                <input type="date" placeholder="Date to" name="dateTo">
+                            </td>
+                            <td>
+                                <p>Status</p>
+                                <select name="status" id="">
+                                    <option value="null"></option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </td>
+
+                        <td>
+                            <button type="submit" name="button" value="searchTC" class="SearchReportButton">Search Time Card</button>
+                        </td>
+                        <td></td>
+    
+    
+                    </form>
+                </tr>
+                <tr>
+                    <td>Employee</td>
+                    <td>Submission Date</td>
+                    <td>Start</td>
+                    <td>End</td>
+                    <td>Duration</td>
+                    <td>Note</td>
+                    <td>Status</td>
+                    <td></td>
+                </tr>
                
-        </table>
+                {% for searchTC  in searchTCs  %}
+                    <tr>
+    
+                        <td>{{searchTC.who }}</td>
+                        <td>{{searchTC.submitedDate |date:"M d, Y"}}</td>
+                        <td id="Astart{{searchTC.id}}">{{searchTC.start | date:"m/d/Y G:i"}}</td>
+                        <td id="Aend{{searchTC.id}}">{{searchTC.end | date:"m/d/Y G:i"}}</td>
+                        <td>{{searchTC.duration }}</td>
+                        <td>
+                        <textarea name="" id="Anote{{searchTC.id}}" rows="2" cols="5" readonly>{{searchTC.note}}</textarea>
+                        </td>
+                        <td>{{searchTC.approval }}</td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+
+                                
+                                {% if searchTC.approval == "Pending"  %}
+                                <input type="text" name="tcID" value="{{searchTC.id}}" hidden>
+                                <button type="button" class="passButton" name="aTCedit" id="{{searchTC.id}}">Edit</button>
+                                <button type="submit" class="deleteButton" name="button" value="ClearTC">Clear</button>
+                                <button type="submit" class="editButton" name="button" value="ApproveTC">Approve</button>
+                                {% endif %}
+                               
+                        
+                            </form>
+                        </td>
+    
+                    </tr>
+                {% endfor %}
+                    
+                   
+            </table>
+        </div>
+        <div class="mob">
+            <table >
+                <tr>
+                    <form action="" method="POST">
+                        {% csrf_token %}
+    
+                        <td>
+                            <p>Employee</p>
+                            <select name="Employee" id="">
+                                <option value="null"></option>
+                                {% for employee in employees %}
+                                <option value="{{employee.id}}">{{employee}}</option>
+                                {% endfor %}
+                            </select>
+    
+                            <p>Date From</p>
+                            <input type="date" placeholder="Date from" name="dateFrom">
+    
+                            <p>Date To</p>
+                            <input type="date" placeholder="Date to" name="dateTo">
+    
+                            <p>Status</p>
+                            <select name="status" id="">
+                                <option value="null"></option>
+                                <option value="Approved">Approved</option>
+                                <option value="Pending">Pending</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button type="submit" name="button" value="searchTC" class="SearchReportButton">Search Time Card</button>
+                        </td>
+    
+    
+                    </form>
+                </tr>
+               
+                {% for searchTC  in searchTCs  %}
+                    <tr>
+    
+                        <td>
+                            <p>Employee: {{searchTC.who }}</p>
+                            <p>Submission Date: {{searchTC.submitedDate |date:"M d, Y"}}</p>
+                            Start: <p id="Astart{{searchTC.id}}">{{searchTC.start | date:"m/d/Y G:i"}}</p>
+                            End: <p id="Aend{{searchTC.id}}">{{searchTC.end | date:"m/d/Y G:i"}}</p>
+                            <p>Duration: {{searchTC.duration }}</p>
+                            Note: <p name="" id="Anote{{searchTC.id}}">{{searchTC.note}}</p>
+                            <p>Status: {{searchTC.approval }}</p>
+                        </td>
+                        <td>
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="searchTCsCSS">
+                                    {% if searchTC.approval == "Pending"  %}
+                                
+                                
+                                    <input type="text" name="tcID" value="{{searchTC.id}}" hidden>
+                                    <div><button type="button" class="passButton" name="aTCedit" id="{{searchTC.id}}">Edit</button></div>
+                                    <div><button type="submit" class="deleteButton" name="button" value="ClearTC">Clear</button></div>
+                                    <div><button type="submit" class="editButton" name="button" value="ApproveTC">Approve</button></div>
+                                    {% endif %}
+                                
+                                
+                                </div>
+                            </form>
+                        </td>
+    
+                    </tr>
+                {% endfor %}
+                    
+                   
+            </table>
+        </div>
+       
         {% else %}  
         <H2> All Time Cards</H2>
         <table>
                 <tr>
-                    <th>Submission Date</th>
+                    <!-- <th>Submission Date</th>
                     <th>Start</th>
                     <th>End</th>
                     <th>Duration</th>
                     <th>Note</th>
-                    <th>Status</th>
+                    <th>Status</th> -->
 
                 </tr>
                 {% for allTc  in allTcs  %}
-                    <tr>
-                        <td>{{allTc.start |date:"M d, Y"}}</td>
-                        <td>{{allTc.start | date:"m/d/Y G:i"}}</td>
-                        <td>{{allTc.end | date:"m/d/Y G:i"}}</td>
-                        <td>{{allTc.duration  }}</td>
-                        <td><textarea name="" id="" cols="20" rows="3" readonly>{{allTc.note}}</textarea></td>
-                        <td>{{allTc.approval  }}</td>
+                <tr>
+
+                    <td>
+                        <p>Submission Date: {{allTc.submitedDate |date:"M d, Y"}}</p>
+                        <p>Start: {{allTc.start | date:"m/d/Y G:i" }}</p>
+                        <p>End: {{allTc.end | date:"m/d/Y G:i" }}</p>
+                        <p>Duration: {{allTc.duration }}</p>
+                        <p>Status: {{allTc.approval  }}</p>
+                        <p>Note:</p>
+                        <p>{{allTc.note}}</p>
+                    </td>
+
+                </tr>
+ 
                 {% endfor %}
+
                 
                
         </table>
+
+        
 
         {% endif %}
     </div>
@@ -233,7 +360,16 @@ Time Card
     
         });
     })
-
+    document.getElementById("maddTimeCard").addEventListener("click",function () {
+        var popUp = document.getElementById("popup2")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose2").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+    
+        });
+    })
 
 
     document.addEventListener('click', (e) => {

@@ -10,7 +10,7 @@ Daily
         <form method="POST" class="incedentReportEntryMainform">
             {% csrf_token %}
             <div>
-                <input type="text" name="reportedBy" id="reportedBy" value="{{incidentReport.reportedBy.id}}" style="display: none;">
+                <input type="text" name="reportedBy" id="reportedBy" value="{{incidentReport.reportedBy.id}}" class="hidden">
                 <p>Incident</p>
                 <select name="inceident" id="">
                     {% for inceident  in inceidents %}

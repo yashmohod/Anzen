@@ -6,6 +6,17 @@ Accounts
 
 
 {% block content %}
+<div id="popup1" class="overlay">
+	<div class="popup">
+		<h2>Pop Up</h2>
+		<a class="close" id="popUpClose" href="#">&times;</a>
+		<div class="content">
+            {% for message in messages  %}
+                <p>{{message}}</p>
+            {% endfor %}
+		</div>
+	</div>
+</div>
 
     <div class="accountsDisplay">
         <H1 style="colourBlue">
@@ -17,6 +28,7 @@ Accounts
             <table >
                 <tr>
                     <th>Badge No.</th>
+                    <th>Rank</th>
                     <th>First name</th>
                     <th>Last name</th>
                     <th>Dob</th>
@@ -28,6 +40,7 @@ Accounts
                 {% for user in users %}
                 <tr>
                     <td> {{ user.badgeNo }}</td>
+                    <td>{{ user.position }}</td>
                     <td>{{ user.firstName }}</td>
                     <td>{{ user.lastName }}</td>
                     <td>{{ user.dob }}</td>
@@ -37,6 +50,8 @@ Accounts
                     <td>
                         <button type="submit" class="editButton" value="edit" name="0{{user.id}}">Edit</button>
                         <button type="submit" class="deleteButton" value="delete" name="1{{user.id}}">Delete</button>
+                        <button type="submit" class="editButton" value="promote"  name="4{{user.id}}">Promote</button>
+                        <button type="submit" class="deleteButton" value="demote"  name="5{{user.id}}">Demote</button>
                         <button type="submit" class="statusButton" value="changestat" name="2{{user.id}}"> Change Status</button>
                         <button type="submit" class="passButton" value="changepass" name="3{{user.id}}"> Change Password</button>
                     </td>
@@ -51,7 +66,16 @@ Accounts
 {% endblock content %}
 
 {% block script %}
-<script>
+<script nonce="{{request.csp_nonce}}">
+    {% if messages  %}
+    var popUp = document.getElementById("popup1")
+    popUp.style.visibility = "visible";
+    popUp.style.opacity = "1";
+    document.getElementById("popUpClose").addEventListener('click', function () {
+        popUp.style.visibility = "hidden";
+        popUp.style.opacity = "0";
+        });
+    {% endif %} 
 
 </script>
 {% endblock script %}

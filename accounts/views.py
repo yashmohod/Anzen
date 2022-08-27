@@ -103,6 +103,54 @@ def userAccounts(request):
         elif buttonFunc == '3':
             redirect_url = reverse('editPass', args=[userID])
             return redirect(redirect_url)
+        elif buttonFunc == '4':
+            curUser = models.User.objects.get(id =userID )
+            if curUser.position == "Probationary Member":
+                curUser.position = "Junior Member"
+                curUser.save()
+                message = curUser.firstName+" "+curUser.lastName+" "+"Is Promoted !!!"
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("userAccounts"))
+            elif curUser.position == "Junior Member":
+                curUser.position = "Senior Member"
+                curUser.save()
+                message = curUser.firstName+" "+curUser.lastName+" "+"Is Promoted !!!"
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("userAccounts"))
+            elif curUser.position == "Senior Member":
+                curUser.position = "Executive Board Member"
+                curUser.save()
+                message = curUser.firstName+" "+curUser.lastName+" "+"Is Promoted !!!"
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("userAccounts"))
+            else:
+                messages.success(request, "Can not be promoted further! ")
+                return HttpResponseRedirect(reverse("userAccounts"))
+
+
+        elif buttonFunc == '5':
+            curUser = models.User.objects.get(id =userID )
+            if curUser.position == "Junior Member":
+                curUser.position = "Probationary Member"
+                curUser.save()
+                message = curUser.firstName+" "+curUser.lastName+" "+"Is Deomoted !!!"
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("userAccounts"))
+            elif curUser.position == "Senior Member":
+                curUser.position = "Junior Member"
+                curUser.save()
+                message = curUser.firstName+" "+curUser.lastName+" "+"Is Deomoted !!!"
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("userAccounts"))
+            elif curUser.position == "Executive Board Member":
+                curUser.position = "Senior Member"
+                curUser.save()
+                message = curUser.firstName+" "+curUser.lastName+" "+"Is Deomoted !!!"
+                messages.success(request, message)
+                return HttpResponseRedirect(reverse("userAccounts"))
+            else:
+                messages.success(request, "Can not be deomoted further! ")
+                return HttpResponseRedirect(reverse("userAccounts"))
 
     return render(request,'accounts/account_management/userAccounts.html',context)
 @login_required(login_url='login')
@@ -521,9 +569,13 @@ def locations(request):
 
 def timeCard(request):
     employees = models.User.objects.all()
+    Memployees =models.User.objects.all() 
     searchTCs=models.timeCard.objects.all().filter(approval="Pending")
+    MsearchTCs= models.timeCard.objects.all().filter(approval="Pending")
     recentTCs = reversed( models.timeCard.objects.all().filter(who =request.user,approval="Pending"))
+    MrecentTCs= reversed( models.timeCard.objects.all().filter(who =request.user,approval="Pending"))
     allTcs = reversed(models.timeCard.objects.all().filter(who =request.user).exclude(approval="Pending"))
+    MallTcs= reversed(models.timeCard.objects.all().filter(who =request.user).exclude(approval="Pending"))
 
     if request.POST.get("button")== "deleteTC":
         tc = models.timeCard.objects.get(id= request.POST.get("tcID"))
@@ -610,11 +662,14 @@ def timeCard(request):
         status = request.POST.get("status")
         print(request.POST)
         searchTCs=models.timeCard.objects.all()
+        MsearchTCs=models.timeCard.objects.all()
         if empID != "null":
             searchTCs = searchTCs.filter(who__id =empID )
+            MsearchTCs = searchTCs.filter(who__id =empID )
        
         if status != "null":
             searchTCs = searchTCs.filter(approval =status )
+            MsearchTCs = searchTCs.filter(approval =status )
         
         temp =[]
         if dateFrom !='' and dateTo !='':
@@ -625,6 +680,7 @@ def timeCard(request):
                 if  (dateFrom >= searchTC.start and dateFrom <= searchTC.end) or (dateTo >= searchTC.start and dateTo <= searchTC.end) :
                     temp.append(searchTC)
             searchTCs=temp
+            MsearchTCs = temp
         elif dateFrom !='' :
             print("here2")
             dateFrom = datetime.strptime(dateFrom,"%Y-%m-%d")
@@ -632,6 +688,7 @@ def timeCard(request):
                 if  (dateFrom >= searchTC.start and dateFrom <= searchTC.end) or (dateFrom < searchTC.start) :
                     temp.append(searchTC)
             searchTCs=temp
+            MsearchTCs = temp
         elif dateTo !='':
             print("here3")
             dateTo = datetime.strptime(dateTo,"%Y-%m-%d")
@@ -639,6 +696,8 @@ def timeCard(request):
                 if  (dateTo <= searchTC.end) or (dateTo >= searchTC.start and dateTo <= searchTC.end) :
                     temp.append(searchTC)
             searchTCs=temp
-        return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs})
-
-    return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs})
+            MsearchTCs = temp
+ 
+        return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs,'MrecentTCs':MrecentTCs,'MallTcs':MallTcs, 'Memployees':Memployees,'MsearchTCs':MsearchTCs})
+        
+    return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs,'MrecentTCs':MrecentTCs,'MallTcs':MallTcs, 'Memployees':Memployees,'MsearchTCs':MsearchTCs})
