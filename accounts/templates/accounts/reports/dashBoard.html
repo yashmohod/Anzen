@@ -32,19 +32,19 @@ Dashboard
             </div>
         <p class="dashBoardGreetingsText" style="margin-left: 10px;">{{user.firstName}}</p>
     </div>
-    
-    <div class="dashboardNavigation">
-        <div>
-            <form action="" method="post">
-                {% csrf_token %}
 
-                {% if  user in clockedIN  %}
-                    <button  type="submit" class="clockOUTbutton" name="ClockButton" value="clockOut">Clock Out</button>
-                {% else %}
-                    <button  type="submit" class="clockINbutton" name="ClockButton" value="clockIn">Clock In</button>
-                {% endif %}
-            </form>
-        </div>
+    <div class="dashboardNavigation">
+        <!--<div>-->
+        <!--    <form action="" method="post">-->
+        <!--        {% csrf_token %}-->
+
+        <!--        {% if  user in clockedIN  %}-->
+        <!--            <button  type="submit" class="clockOUTbutton" name="ClockButton" value="clockOut">Clock Out</button>-->
+        <!--        {% else %}-->
+        <!--            <button  type="submit" class="clockINbutton" name="ClockButton" value="clockIn">Clock In</button>-->
+        <!--        {% endif %}-->
+        <!--    </form>-->
+        <!--</div>-->
 
         <div>
             <a href="{% url 'incidentReportEntry' %}">
@@ -67,14 +67,94 @@ Dashboard
                 </button>
             </a>
         </div>
+        <!--<div>-->
+        <!--    <a href="{% url 'timeCard' %}">-->
+        <!--        <button class="dassboardButtons" name="dashboardNavigationButton" value="0">-->
+        <!--            Time Card-->
+        <!--        </button>-->
+        <!--    </a>-->
+        <!--</div>-->
+        {% if user.position == "Probationary Member" %}
         <div>
-            <a href="{% url 'timeCard' %}">
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfvIs1dc_TL2qFivyevG_LR9txhjFLPGWu6O5JcKRCdqlKLKA%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=HOX0F5JU419nvnKqqH7qMk%2B0WkyYF1cmggYABzD9fOE%3D&reserved=0">
                 <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
-                    Time Card
+                    Probationary Member Self Eval
                 </button>
             </a>
         </div>
-        {% if user.is_superuser %}
+
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdoUWDh2nKgE8lSAvnRFQb0llbqCiYhjVBMDmkXhJQsP2d35Q%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=9M6NPe%2B76dKT2Y4iiwLKb72dL5c8Cxtyzkjgrr05y8E%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    SASP Eval for a Trainee
+                </button>
+            </a>
+        </div>
+        {% endif %}
+        {% if user.position == "Junior Member" %}
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfVFFTKghH1zJJx-ZvhrtJxwxEIzFMcKK3N5KOrm0rFhDvVZA%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=yXnYhP2vQQMbniBofvceJABQrUBOpHVUXHZ8z63xqVo%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Junior Member Self Eval
+                </button>
+            </a>
+        </div>
+
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdoUWDh2nKgE8lSAvnRFQb0llbqCiYhjVBMDmkXhJQsP2d35Q%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=9M6NPe%2B76dKT2Y4iiwLKb72dL5c8Cxtyzkjgrr05y8E%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    SASP Eval for a Trainee
+                </button>
+            </a>
+        </div>
+        {% endif %}
+        {% if user.position == "Senior Member" %}
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdhKZICw5BhHMp1ubDEJlFZEeVRVEOnx5iPDQieziG-fRl_vA%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=eMMwU371sPnv%2Fd2KGEqpLLtExqvSrxFGX9yjUa%2Fep8I%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Senior Eval for Probationary Member
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSc1Ihg_MKrxUjs37x1tjAtun0zCW7UznTrUbUzOpL0N25Oj_Q%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=C6KIo%2F7XWlqwqng6S5bCoymjQ1QG7KgZeseDSiOoIfA%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Senior Eval for Junior Member
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdoUWDh2nKgE8lSAvnRFQb0llbqCiYhjVBMDmkXhJQsP2d35Q%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=9M6NPe%2B76dKT2Y4iiwLKb72dL5c8Cxtyzkjgrr05y8E%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    SASP Eval for a Trainee
+                </button>
+            </a>
+        </div>
+        {% endif %}
+
+        {% if user.position == "Executive Board Member" %}
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdhKZICw5BhHMp1ubDEJlFZEeVRVEOnx5iPDQieziG-fRl_vA%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=eMMwU371sPnv%2Fd2KGEqpLLtExqvSrxFGX9yjUa%2Fep8I%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Senior Eval for Probationary Member
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSc1Ihg_MKrxUjs37x1tjAtun0zCW7UznTrUbUzOpL0N25Oj_Q%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=C6KIo%2F7XWlqwqng6S5bCoymjQ1QG7KgZeseDSiOoIfA%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Senior Eval for Junior Member
+                </button>
+            </a>
+        </div>
+        <div>
+            <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSdoUWDh2nKgE8lSAvnRFQb0llbqCiYhjVBMDmkXhJQsP2d35Q%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=9M6NPe%2B76dKT2Y4iiwLKb72dL5c8Cxtyzkjgrr05y8E%3D&reserved=0">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    SASP Eval for a Trainee
+                </button>
+            </a>
+        </div>
+
             <div>
                 <a href="{% url 'incidentEntry' %}">
                     <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
@@ -112,7 +192,7 @@ Dashboard
         popUp.style.visibility = "hidden";
         popUp.style.opacity = "0";
         });
-    {% endif %} 
+    {% endif %}
 
 
 </script>
