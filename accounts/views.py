@@ -1,8 +1,7 @@
 
 from datetime import datetime
-import re
+
 from time import strftime
-from urllib import request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
@@ -11,7 +10,9 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.http import HttpResponseRedirect
-from django.contrib import messages
+
+
+
 
 
 # Create your views here.
@@ -225,22 +226,23 @@ def dashBoard(request):
     clockedIN =[]
     for c in CoI:
         clockedIN.append(c.who)
-    
-    
+
+
 
     if request.POST.get("ClockButton") == "clockIn":
         CoI = models.clockedIn.objects.all()
         clockedIN =[]
         for c in CoI:
             clockedIN.append(c.who)
-        if not( request.user in clockedIN): 
-            models.clockedIn.objects.create(who=request.user,start= datetime.now())
+        if not( request.user in clockedIN):
+            clockin = models.clockedIn.objects.create(who=request.user,start= datetime.strptime(request.POST.get("timeNow").replace("T", " "),"%Y-%m-%d %H:%M"))
+            clockin.save()
             CoI = models.clockedIn.objects.all()
             return HttpResponseRedirect(reverse("dashBoard"))
 
     if request.POST.get("ClockButton") == "clockOut":
         clockInRec = models.clockedIn.objects.get(who = request.user)
-        endDT = timezone.now()
+        endDT = datetime.strptime(request.POST.get("timeNow").replace("T", " "),"%Y-%m-%d %H:%M")
         # print(type(clockInRec.start))
         # print(endDT)
         pop = endDT-clockInRec.start
@@ -569,7 +571,7 @@ def locations(request):
 
 def timeCard(request):
     employees = models.User.objects.all()
-    Memployees =models.User.objects.all() 
+    Memployees =models.User.objects.all()
     searchTCs=models.timeCard.objects.all().filter(approval="Pending")
     MsearchTCs= models.timeCard.objects.all().filter(approval="Pending")
     recentTCs = reversed( models.timeCard.objects.all().filter(who =request.user,approval="Pending"))
@@ -602,12 +604,12 @@ def timeCard(request):
                 messages.success(request, 'There is a time over Lap!!')
                 messages.success(request, 'Check the previous time cards.')
                 return HttpResponseRedirect(reverse("timeCard"))
-        
+
         ntc = models.timeCard.objects.create(who = request.user, start = st,duration=dur, end = en,note = nt )
         ntc.save()
         messages.success(request, 'Time Card Submited!!')
         return HttpResponseRedirect(reverse("timeCard"))
-    
+
     if request.POST.get("button") == "timeCardEditSubmision":
         st = datetime.strptime(request.POST.get("start").replace("T", " "),"%Y-%m-%d %H:%M")
         en = datetime.strptime(request.POST.get("end").replace("T", " "),"%Y-%m-%d %H:%M")
@@ -627,7 +629,7 @@ def timeCard(request):
                 messages.success(request, 'There is a time over Lap!!')
                 messages.success(request, 'Check the previous time cards.')
                 return HttpResponseRedirect(reverse("timeCard"))
-        
+
         ntc = models.timeCard.objects.get(id = tcid)
         ntc.start= st
         ntc.end= en
@@ -666,11 +668,11 @@ def timeCard(request):
         if empID != "null":
             searchTCs = searchTCs.filter(who__id =empID )
             MsearchTCs = searchTCs.filter(who__id =empID )
-       
+
         if status != "null":
             searchTCs = searchTCs.filter(approval =status )
             MsearchTCs = searchTCs.filter(approval =status )
-        
+
         temp =[]
         if dateFrom !='' and dateTo !='':
             print("here")
@@ -697,7 +699,7 @@ def timeCard(request):
                     temp.append(searchTC)
             searchTCs=temp
             MsearchTCs = temp
- 
+
         return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs,'MrecentTCs':MrecentTCs,'MallTcs':MallTcs, 'Memployees':Memployees,'MsearchTCs':MsearchTCs})
-        
+
     return render(request,'accounts/account_management/timeCard.html',{'recentTCs':recentTCs,'allTcs':allTcs, 'employees':employees,'searchTCs':searchTCs,'MrecentTCs':MrecentTCs,'MallTcs':MallTcs, 'Memployees':Memployees,'MsearchTCs':MsearchTCs})

@@ -37,6 +37,8 @@ Dashboard
         <!--<div>-->
         <!--    <form action="" method="post">-->
         <!--        {% csrf_token %}-->
+        <!--        <input type="datetime-local" name="timeNow" id="timeNow" class="hidden" >-->
+                <!--<input type="datetime-local" name="timeNow" id="timeNow"  >-->
 
         <!--        {% if  user in clockedIN  %}-->
         <!--            <button  type="submit" class="clockOUTbutton" name="ClockButton" value="clockOut">Clock Out</button>-->
@@ -67,13 +69,13 @@ Dashboard
                 </button>
             </a>
         </div>
-        <!--<div>-->
-        <!--    <a href="{% url 'timeCard' %}">-->
-        <!--        <button class="dassboardButtons" name="dashboardNavigationButton" value="0">-->
-        <!--            Time Card-->
-        <!--        </button>-->
-        <!--    </a>-->
-        <!--</div>-->
+        <div>
+            <a href="{% url 'timeCard' %}">
+                <button class="dassboardButtons" name="dashboardNavigationButton" value="0">
+                    Time Card
+                </button>
+            </a>
+        </div>
         {% if user.position == "Probationary Member" %}
         <div>
             <a href="https://nam10.safelinks.protection.outlook.com/?url=https%3A%2F%2Fdocs.google.com%2Fforms%2Fd%2Fe%2F1FAIpQLSfvIs1dc_TL2qFivyevG_LR9txhjFLPGWu6O5JcKRCdqlKLKA%2Fviewform%3Fusp%3Dsf_link&data=05%7C01%7Cymohod%40ithaca.edu%7C5ee11fba7a074c5e160408da86b8c99c%7Cfa1ac8f65e5448579f0b4aa422c09689%7C0%7C0%7C637970425471332232%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=HOX0F5JU419nvnKqqH7qMk%2B0WkyYF1cmggYABzD9fOE%3D&reserved=0">
@@ -193,6 +195,14 @@ Dashboard
         popUp.style.opacity = "0";
         });
     {% endif %}
+
+    window.addEventListener('load', (event) => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('timeNow').value = now.toISOString().slice(0, 16);
+
+
+    });
 
 
 </script>

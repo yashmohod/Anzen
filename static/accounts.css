@@ -37,7 +37,7 @@ body {
   min-height: 100vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
-  
+
 }
 
 /* A elements that don't have a class get default styles */
@@ -818,7 +818,7 @@ tbody td:hover:before {
   overflow: auto;
   display: flex;
   flex-direction:column ;
- 
+
 }
 .TimeCardWraper{
   height: 85vh;
@@ -832,7 +832,7 @@ tbody td:hover:before {
   width: auto;
   height: 50%;
   overflow:auto;
-  
+
 }
 .ownTimeCards table{
   margin-top: 10px;
@@ -845,7 +845,7 @@ tbody td:hover:before {
   color:#ffffff;
   width: auto;
   height: 50%;
-  overflow:auto;  
+  overflow:auto;
 }
 .ownTimeCardsLaptop table{
   margin-top: 10px;
@@ -868,7 +868,7 @@ tbody td:hover:before {
   overflow: auto;
 }
 
- 
+
 .timeCardRequest table{
   margin-top: 10px;
 }
@@ -907,7 +907,7 @@ tbody td:hover:before {
   overflow: auto;
   display: flex;
   flex-direction:column ;
- 
+
 }
 
 .popup3 {
@@ -942,7 +942,7 @@ tbody td:hover:before {
   overflow: auto;
   display: flex;
   flex-direction:column ;
- 
+
 }
 
 
@@ -974,7 +974,7 @@ tbody td:hover:before {
     border: 1px solid #ffffff;
   }
 
-  
+
 .TCsubmitButton{
   cursor: pointer;
   outline: 0;
